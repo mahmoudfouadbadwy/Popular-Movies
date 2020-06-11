@@ -16,7 +16,6 @@ class Fav: UIViewController ,UICollectionViewDelegate,UICollectionViewDataSource
     var movies:[NSManagedObject]=[]
     let imagePath:String = "http://image.tmdb.org/t/p/w185/"
     var index:Int = -1
-    let network:NetworkModel = NetworkModel()
     override func viewDidLoad() {
         super.viewDidLoad()
         favCollection.delegate = self
@@ -24,7 +23,7 @@ class Fav: UIViewController ,UICollectionViewDelegate,UICollectionViewDataSource
         // Do any additional setup after loading the view.
     }
     override func viewWillAppear(_ animated: Bool) {
-       movies = core.getFavouriteMovies()
+   //   movies = core.getFavouriteMovies()
        favCollection.reloadData()
      
     }

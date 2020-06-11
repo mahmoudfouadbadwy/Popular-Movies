@@ -11,7 +11,6 @@ import UIKit
 extension Home{
     func setupMoviesCollection()
     {
-        // movies collection
         collection.delegate = self
         collection.dataSource = self
     }
@@ -19,62 +18,30 @@ extension Home{
 
 extension Home: UICollectionViewDataSource
 {
-    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if collectionView.tag == 0  // films collection
+        if collectionView.tag == 0  // movies collection
         {
-            if network.checkNetwork(){  // connected to network
-                return movies.count
-            }
-            else{  // not connected
-                return localMovies.count
-            }
+            return movies.count
         }
         else
         {
             return 2   // menu collection
-            
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        // film collection
+        // movies collection
         if collectionView.tag == 0
         {
             let cell:MovieCell = collectionView.dequeueReusableCell(withReuseIdentifier: "MovieCell", for: indexPath) as! MovieCell
-            // connected to network
-            if  network.checkNetwork()  //movies.count != 0
-            {
-                if let path = (movies[indexPath.row]["poster_path"] as? String)
+            let path = (movies[indexPath.row].moviePoster!)
+            cell.poster.sd_setImage(with: URL(string: Constants.imagePath + path),placeholderImage:UIImage.init(named: "loading.png"))
+            // add movies localy to core data
+            // add only 60 movie for show on not connected mode
+            if Networking.checkNetwork(){
+                if self.movies.count<=60
                 {
-                    
-                    cell.poster.sd_setImage(with: URL(string: imagePath+path),placeholderImage:UIImage.init(named: "loading.png"), completed:{
-                        
-                        image,error,chaceType,imageUrl in
-                        
-                        // add movies localy to core data
-                        // add only 60 film for show on not connected mode
-                        if self.movies.count<=60
-                        {
-                            
-                            self.coredata.setId(id: self.movies[indexPath.row]["id"] as! Double)
-                            self.coredata.addToMovies(name: self.movies[indexPath.row]["original_title"] as! String, overview: self.movies[indexPath.row]["overview"] as! String,
-                                                      image: self.movies[indexPath.row]["poster_path"] as! String,
-                                                      rate: self.movies[indexPath.row]["vote_average"] as! Double,
-                                                      release: self.movies[indexPath.row]["release_date"] as! String, flag: 0)
-                        }
-                    })
-                    
-                }
-            }
-                // not connected
-            else
-            {
-                if let path = (localMovies[indexPath.row].value(forKey: "image") as? String)
-                {
-                    
-                    cell.poster.sd_setImage(with: URL(string: imagePath+path), completed: nil)
-                    
+                    localHomeVM.addMovieTolocalStorage(id: self.movies[indexPath.row].id, name: self.movies[indexPath.row].originalTitle, overview: self.movies[indexPath.row].overview, image: self.movies[indexPath.row].moviePoster, rate: self.movies[indexPath.row].voteAverage, release: self.movies[indexPath.row].releaseDate)
                 }
             }
             return cell
@@ -107,68 +74,65 @@ extension Home: UICollectionViewDataSource
 extension Home:UICollectionViewDelegate{
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        // films collection
+        // movies collection
         if collectionView.tag == 0
         {
-            
             index = indexPath.row
             performSegue(withIdentifier: "detail", sender:self)
         }
-        else  // menu collection
-        {
-            if indexPath.row == 0  // highest- rated
-            {
-                
-                if network.checkNetwork()
-                {
-                    getApiData(url: "http://api.themoviedb.org/3/discover/movie?sort_by=vote_count.desc&api_key=d52a9c41632a8b38d8c0dd5b5652b937",appendFalg: 0)
-                    
-                }
-                else
-                {
-                    let sortrate = localMovies.sorted { Float(truncating: $0.value(forKey: "frate") as! NSNumber) > Float(truncating: $1.value(forKey: "frate") as! NSNumber)}
-                    popMovies = localMovies
-                    localMovies = sortrate
-                    collection.reloadData()
-                    
-                }
-                homeTitle.title = "Highest-Rated Movies"
-            }
-            else if indexPath.row == 1  // most popularity
-            {
-                if network.checkNetwork()
-                {
-                    getApiData(url: "http://api.themoviedb.org/3/discover/movie?api_key=d52a9c41632a8b38d8c0dd5b5652b937",appendFalg: 0)
-                    
-                }
-                else
-                {
-                    if popMovies.count != 0
-                    {
-                        localMovies = popMovies
-                        collection.reloadData()
-                    }
-                    
-                }
-                homeTitle.title = "Popular Movies"
-            }
-            handledismiss()
-        }
+        //        else  // menu collection
+        //        {
+        //            if indexPath.row == 0  // highest- rated
+        //            {
+        //
+        //                if network.checkNetwork()
+        //                {
+        //                    getApiData(url: "http://api.themoviedb.org/3/discover/movie?sort_by=vote_count.desc&api_key=d52a9c41632a8b38d8c0dd5b5652b937",appendFalg: 0)
+        //
+        //                }
+        //                else
+        //                {
+        //                    let sortrate = localMovies.sorted { Float(truncating: $0.value(forKey: "frate") as! NSNumber) > Float(truncating: $1.value(forKey: "frate") as! NSNumber)}
+        //                    popMovies = localMovies
+        //                    localMovies = sortrate
+        //                    collection.reloadData()
+        //
+        //                }
+        //                homeTitle.title = "Highest-Rated Movies"
+        //            }
+        //            else if indexPath.row == 1  // most popularity
+        //            {
+        //                if network.checkNetwork()
+        //                {
+        //                    getApiData(url: "http://api.themoviedb.org/3/discover/movie?api_key=d52a9c41632a8b38d8c0dd5b5652b937",appendFalg: 0)
+        //
+        //                }
+        //                else
+        //                {
+        //                    if popMovies.count != 0
+        //                    {
+        //                        localMovies = popMovies
+        //                        collection.reloadData()
+        //                    }
+        //
+        //                }
+        //                homeTitle.title = "Popular Movies"
+        //            }
+        //            handledismiss()
+        //        }
         
     }
-    
-    // chack that i scroll fro last cell
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         // connected to network
-        if network.checkNetwork()
+        if Networking.checkNetwork()
         {
             if movies.count != 0 {
                 if indexPath.row == movies.count - 1
                 {
-                    
                     let pageNo:Int = movies.count/20
-                    
-                    getApiData(url:"http://api.themoviedb.org/3/discover/movie?api_key=d52a9c41632a8b38d8c0dd5b5652b937&page=\(pageNo+1)",appendFalg: 1)
+                    homeVM.getmovies(by: "\(Constants.moviesUrl)&page=\(pageNo+1)", appendFlag: 1, completion: { [weak self](results) in
+                        self?.movies = results
+                    })
                 }
             }
         }
@@ -188,9 +152,7 @@ extension Home:UICollectionViewDelegateFlowLayout
         else
             
         {
-            
             return CGSize(width: collectionView.frame.width, height: 40)
-            
         }
     }
     
