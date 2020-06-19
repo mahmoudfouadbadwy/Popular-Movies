@@ -70,34 +70,34 @@ class Fav: UIViewController ,UICollectionViewDelegate,UICollectionViewDataSource
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let detail:MovieDetail = segue.destination as! MovieDetail
+        let detail:MovieDetailsController = segue.destination as! MovieDetailsController
         
-            if let fname = (movies[index].value(forKey: "name")) as? String
-            {
-                detail.filmName = fname
-            }
-            if let fimage:String = (movies[index].value(forKey: "image")) as? String
-            {
-                detail.filmImage = fimage
-            }
-            
-            if let  frelease = (movies[index].value(forKey: "frelease")) as? String
-            {
-                detail.filmRelease = frelease
-            }
-            
-            if let foverview = (movies[index].value(forKey: "overview")) as? String
-            {
-                detail.filmOverView = foverview
-            }
-            if let frate = (movies[index].value(forKey: "frate")) as? Double
-            {
-                detail.filmRate = frate
-            }
-            
+//            if let fname = (movies[index].value(forKey: "name")) as? String
+//            {
+//                detail.filmName = fname
+//            }
+//            if let fimage:String = (movies[index].value(forKey: "image")) as? String
+//            {
+//                detail.filmImage = fimage
+//            }
+//
+//            if let  frelease = (movies[index].value(forKey: "frelease")) as? String
+//            {
+//                detail.filmRelease = frelease
+//            }
+//
+//            if let foverview = (movies[index].value(forKey: "overview")) as? String
+//            {
+//                detail.filmOverView = foverview
+//            }
+//            if let frate = (movies[index].value(forKey: "frate")) as? Double
+//            {
+//                detail.filmRate = frate
+//            }
+        
             if let fid = (movies[index].value(forKey: "id")) as? Double
             {
-                detail.filmId = fid
+              //  detail.filmId = fid
             }   
         
     }

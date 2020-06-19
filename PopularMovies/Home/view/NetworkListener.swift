@@ -7,7 +7,6 @@
 //
 
 import ReachabilitySwift
-
 extension Home: NetworkStatusListener {
     func networkStatusDidChange(status: Reachability.NetworkStatus) {
         switch status {

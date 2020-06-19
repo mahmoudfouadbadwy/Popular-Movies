@@ -23,17 +23,13 @@ struct HomeVM{
         self.voteAverage = movie.voteAverage
         self.releaseDate = movie.releaseDate
     }
-    
-    init(poster:String)
-    {
-        self.moviePoster = poster
-    }
 }
 
 class MoviesStore{
-    private  var movies:[HomeVM]!
-    private  var moviesData:MoviesDataAccess!
-    private  var coreData:CoreData!
+    private var movies:[HomeVM]!
+    private var moviesData:MoviesDataAccess!
+    private var coreData:CoreData!
+    private var movie:Movie!
     init(moviesData:MoviesDataAccess) {
         self.moviesData = moviesData
     }
@@ -54,8 +50,9 @@ class MoviesStore{
     
     func getLocalMovies()-> [HomeVM]
     {
-        return coreData.getFromMovies().map { (result)  in
-            HomeVM(poster: result.value(forKey: "image") as? String ?? "")
+      return coreData.getFromMovies().map { (result) in
+            movie = Movie(id: result.value(forKey: "id") as? Int ?? 0, originalTitle: result.value(forKey: "name") as? String ?? "", overview: result.value(forKey: "overview") as? String ?? "", posterPath: result.value(forKey: "image") as? String ?? "", voteAverage: result.value(forKey: "frate") as? Double ?? 0.0, releaseDate: result.value(forKey: "frelease") as? String ?? "")
+         return HomeVM(movie: movie)
         }
     }
     

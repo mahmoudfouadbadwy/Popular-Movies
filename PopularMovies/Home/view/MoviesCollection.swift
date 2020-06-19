@@ -27,7 +27,7 @@ extension Home: UICollectionViewDataSource
         {
             return 2   // menu collection
         }
-    }
+}
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         // movies collection
@@ -67,8 +67,6 @@ extension Home: UICollectionViewDataSource
         }
         
     }
-    
-    
 }
 
 extension Home:UICollectionViewDelegate{
@@ -80,46 +78,47 @@ extension Home:UICollectionViewDelegate{
             index = indexPath.row
             performSegue(withIdentifier: "detail", sender:self)
         }
-        //        else  // menu collection
-        //        {
-        //            if indexPath.row == 0  // highest- rated
-        //            {
-        //
-        //                if network.checkNetwork()
-        //                {
-        //                    getApiData(url: "http://api.themoviedb.org/3/discover/movie?sort_by=vote_count.desc&api_key=d52a9c41632a8b38d8c0dd5b5652b937",appendFalg: 0)
-        //
-        //                }
-        //                else
-        //                {
-        //                    let sortrate = localMovies.sorted { Float(truncating: $0.value(forKey: "frate") as! NSNumber) > Float(truncating: $1.value(forKey: "frate") as! NSNumber)}
-        //                    popMovies = localMovies
-        //                    localMovies = sortrate
-        //                    collection.reloadData()
-        //
-        //                }
-        //                homeTitle.title = "Highest-Rated Movies"
-        //            }
-        //            else if indexPath.row == 1  // most popularity
-        //            {
-        //                if network.checkNetwork()
-        //                {
-        //                    getApiData(url: "http://api.themoviedb.org/3/discover/movie?api_key=d52a9c41632a8b38d8c0dd5b5652b937",appendFalg: 0)
-        //
-        //                }
-        //                else
-        //                {
-        //                    if popMovies.count != 0
-        //                    {
-        //                        localMovies = popMovies
-        //                        collection.reloadData()
-        //                    }
-        //
-        //                }
-        //                homeTitle.title = "Popular Movies"
-        //            }
-        //            handledismiss()
-        //        }
+            // menu collection
+        else
+        {
+            if indexPath.row == 0  // highest- rated
+            {
+                if Networking.checkNetwork()
+                {
+                    homeVM.getmovies(by: Constants.moviesTopRate, appendFlag: 0, completion: {[weak self] (results) in
+                        self?.movies = results
+                    })
+                }
+                else
+                {
+                    let sortrate = movies.sorted { Double(truncating: $0.voteAverage! as NSNumber) > Double(truncating: $1.voteAverage! as NSNumber)}
+                    popMovies = movies
+                    movies = sortrate
+                    
+                }
+                homeTitle.title = "Highest-Rated Movies"
+            }
+            else if indexPath.row == 1  // most popularity
+            {
+                if Networking.checkNetwork()
+                {
+                    homeVM.getmovies(by: Constants.moviesUrl, appendFlag: 0, completion: {[weak self ] (results) in
+                        self?.movies = results
+                    })
+                    
+                }
+                else
+                {
+                    if popMovies.count != 0
+                    {
+                        movies = popMovies
+                    }
+                    
+                }
+                homeTitle.title = "Popular Movies"
+            }
+            handledismiss()
+        }
         
     }
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
