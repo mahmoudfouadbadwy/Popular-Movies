@@ -19,7 +19,38 @@ class MovieDetailsVM{
             self.movieDetails = MovieDetails(movie: result)
             completion(self.movieDetails)
         }
-        
+    }
+    
+    func getMovieTrailers(url:String,completion:@escaping([Dictionary<String,Any>])->Void){
+        movieDetailsAccess.getMovieTrailers(url: url) { (result) in
+            completion(result)
+        }
+    }
+    
+    func getMovieReviews(url:String,completion:@escaping([Dictionary<String,Any>])->Void)
+    {
+        movieDetailsAccess.getMovieReviews(url: url) { (result) in
+             completion(result)
+        }
+    }
+}
+
+class MovieCoreVM{
+    var coreData:CoreData!
+    var movie:Movie!
+    init(movieCoreData:CoreData) {
+        self.coreData = movieCoreData
+    }
+    func checkIsFavoriteMovie(movieID:Int)->Int{
+        return coreData.checkIsFavourite(id: movieID)
+    }
+    
+    func addToFavorite(movieID:Int,movie:MovieDetails){
+        self.movie = Movie(id: movieID, originalTitle: movie.title, overview: movie.overview, posterPath: movie.poster, voteAverage: movie.rate, releaseDate: movie.release)
+        coreData.addToFavourite(movie: self.movie)
+    }
+    func deleteFromFavorite(movieID:Int){
+        self.coreData.deleteFromFavourite(id: movieID)
     }
 }
 

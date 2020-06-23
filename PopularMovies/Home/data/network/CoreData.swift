@@ -17,7 +17,7 @@ class CoreData{
         managedContext = appDelegate.persistentContainer.viewContext
         fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Movies")
     }
-
+    
     func addToStorage(mov:Movie,flag:Int)
     {
         fetchRequest.predicate = NSPredicate.init(format:"id == \(mov.id)")
@@ -42,7 +42,7 @@ class CoreData{
         }
     }
     
-     func getFromMovies()-> [NSManagedObject]{
+    func getFromMovies()-> [NSManagedObject]{
         do{
             
             movies =  try managedContext.fetch(fetchRequest)
@@ -53,65 +53,66 @@ class CoreData{
         return movies
     }
     
-//     func getFavouriteMovies()-> [NSManagedObject]
-//    {
-//        fetchRequest.predicate =  NSPredicate.init(format:"flag == \(1)")
-//        do{
-//            movies =  try managedContext.fetch(fetchRequest)
-//        }
-//        catch let error as NSError{
-//            print(error)
-//        }
-//        return movies
-//    }
-//
-//    func addToFavourite(id:Double,name:String,overview:String,image:String,rate:Double,release:String)
-//    {
-//        fetchRequest.predicate =  NSPredicate.init(format:"id == \(id)")
-//        if let result = try? managedContext.fetch(fetchRequest){
-//            if result.count == 0
-//            {
-//                addToMovies(id:id,name: name, overview: overview, image: image, rate: rate, release: release, flag: 1)
-//            }
-//            else
-//            {
-//                result[0].setValue(1, forKey: "flag")
-//                do{
-//                    try managedContext.save()
-//                }
-//                catch let error as NSError{
-//                    print("error saving in core data : \(error)")
-//                }
-//            }
-//        }
-//    }
-//
-//    func deleteFromFavourite(id:Double)
-//    {
-//        fetchRequest.predicate =  NSPredicate.init(format:"id == \(id)")
-//        if let result = try? managedContext.fetch(fetchRequest){
-//            result[0].setValue(0, forKey: "flag")
-//        }
-//        do{
-//            try managedContext.save()
-//        }
-//        catch let error as NSError{
-//            print("error saving in core data : \(error)")
-//        }
-//
-//    }
-//
-//
-//    func checkIsFavourite(id:Double)->Int
-//    {
-//        let idPredicate = NSPredicate.init(format:"id == \(id)")
-//        let flagPredicate = NSPredicate.init(format:"flag == \(1)")
-//        let andPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [ idPredicate,flagPredicate])
-//        fetchRequest.predicate = andPredicate
-//        if let result = try? managedContext.fetch(fetchRequest){
-//            return result.count
-//        }
-//        return 0
-//    }
-//
+    func getFavouriteMovies()-> [NSManagedObject]
+    {
+        fetchRequest.predicate =  NSPredicate.init(format:"flag == \(1)")
+        do{
+            movies =  try managedContext.fetch(fetchRequest)
+        }
+        catch let error as NSError{
+            print(error)
+        }
+        return movies
+    }
+    
+    
+    func addToFavourite(movie:Movie)
+    {
+        fetchRequest.predicate =  NSPredicate.init(format:"id == \(movie.id)")
+        if let result = try? managedContext.fetch(fetchRequest){
+            if result.count == 0
+            {
+                addToStorage(mov: movie, flag: 1)
+            }
+            else
+            {
+                result[0].setValue(1, forKey: "flag")
+                do{
+                    try managedContext.save()
+                }
+                catch let error as NSError{
+                    print("error saving in core data : \(error)")
+                }
+            }
+        }
+    }
+    
+    func deleteFromFavourite(id:Int)
+    {
+        fetchRequest.predicate =  NSPredicate.init(format:"id == \(id)")
+        if let result = try? managedContext.fetch(fetchRequest){
+            result[0].setValue(0, forKey: "flag")
+        }
+        do{
+            try managedContext.save()
+        }
+        catch let error as NSError{
+            print("error saving in core data : \(error)")
+        }
+        
+    }
+    
+    
+    func checkIsFavourite(id:Int)->Int
+    {
+        let idPredicate = NSPredicate.init(format:"id == \(id)")
+        let flagPredicate = NSPredicate.init(format:"flag == \(1)")
+        let andPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [ idPredicate,flagPredicate])
+        fetchRequest.predicate = andPredicate
+        if let result = try? managedContext.fetch(fetchRequest){
+            return result.count
+        }
+        return 0
+    }
+    
 }

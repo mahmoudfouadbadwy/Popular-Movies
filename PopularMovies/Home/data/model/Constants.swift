@@ -15,6 +15,8 @@ struct Constants {
     static let reviewPath2:String = "/reviews?api_key=d52a9c41632a8b38d8c0dd5b5652b937"
     static let movieDetailsPath:String = "https://api.themoviedb.org/3/movie/"
     static let movieDetailsPath2:String = "?api_key=d52a9c41632a8b38d8c0dd5b5652b937&language=en-US"
+    static let movieTrailerPath:String  = "https://api.themoviedb.org/3/movie/"
+    static let movieTrailerPath2:String = "/videos?api_key=d52a9c41632a8b38d8c0dd5b5652b937&language=en-US"
 }
 
 

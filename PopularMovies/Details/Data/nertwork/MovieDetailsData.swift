@@ -29,6 +29,43 @@ class MovieDetailsData{
         })
         
     }
+    
+    
+    func getMovieTrailers(url:String,completion:@escaping([Dictionary<String,Any>])->Void){
+        let manager = AFHTTPSessionManager()
+        manager.get(
+            url,
+            parameters: nil,
+            success:
+            {
+                (operation, responseObject) in
+                let result:Dictionary<String,Any> = responseObject as! Dictionary<String, Any>
+                completion(result["results"] as! [Dictionary<String, Any>])
+            },
+            failure:
+            {
+                (operation, error) in
+                print(error)
+        })
+    }
+    
+    func getMovieReviews(url:String,completion:@escaping([Dictionary<String,Any>])->Void){
+        let manager = AFHTTPSessionManager()
+        manager.get(
+            url,
+            parameters: nil,
+            success:
+            {
+                (operation, responseObject) in
+                let result:Dictionary<String,Any> = responseObject as! Dictionary<String, Any>
+                completion(result["results"] as! [Dictionary<String, Any>])
+        },
+            failure:
+            {
+                (operation, error) in
+                print(error)
+        })
+    }
 }
 
 

@@ -9,7 +9,6 @@
 import UIKit
 import SDWebImage
 import Cosmos
-import AFNetworking
 class MovieDetailsController: UIViewController {
     @IBOutlet weak var youtubeCollection: UICollectionView!
     @IBOutlet weak var reviewsCollection: UICollectionView!
@@ -17,14 +16,24 @@ class MovieDetailsController: UIViewController {
     @IBOutlet weak var movieOverview: UITextView!
     @IBOutlet weak var movieName: UILabel!
     @IBOutlet weak var movieImage: UIImageView!
-    @IBOutlet weak var MovieDate: UILabel!
-    @IBOutlet weak var MovieFav: UIButton!
+    @IBOutlet weak var movieDate: UILabel!
+    @IBOutlet weak var favButton: UIButton!
     var filmId:Int!
-    var trailers:[Dictionary<String,Any>] = []
-    var reviewsArr:[Dictionary<String,Any>] = []
     var movie:MovieDetails!
     var movieDetailsVM:MovieDetailsVM!
     var movieData:MovieDetailsData!
+    var movieCore:CoreData!
+    var movieCoreVM:MovieCoreVM!
+    var trailers:[Dictionary<String,Any>]!=[] {
+        didSet{
+            self.youtubeCollection.reloadData()
+        }
+    }
+    var reviewsArr:[Dictionary<String,Any>]! = []{
+        didSet{
+            self.reviewsCollection.reloadData()
+        }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCollections()
@@ -34,58 +43,41 @@ class MovieDetailsController: UIViewController {
             self.movie = result
             self.bindDetails()
         }
+        self.movieCore = CoreData()
+        self.movieCoreVM = MovieCoreVM(movieCoreData: movieCore)
     }
     
     override func viewWillAppear(_ animated: Bool) {
-      //  core = CoreData()
-     //   core?.setId(id: filmId)
-        
-//        if core?.checkIsFavourite(id: filmId) != 0
-//        {
-//            MovieFav.tintColor = UIColor.red
-//        }
         if Networking.checkNetwork()
         {
-          //  bindDetails()
-            // reviews
-       //     showReviews()
-            // trailers
-       //     shwoTrailers()
-            
+            showReviews()
+            shwoTrailers()
         }
-        
-
     }
-    
     
     @IBAction func backButton(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
     
-    
     @IBAction func makeFavourite(_ sender: UIButton) {
-        // make favourite
-        if (MovieFav.tintColor == UIColor.white)
+        if (favButton.tintColor == UIColor.white)
         {
-            MovieFav.tintColor = UIColor.red
-//            core?.addToFavourite(name: filmName, overview: filmOverView, image: filmImage, rate: filmRate, release: filmRelease,flag: 1)
+            favButton.tintColor = UIColor.red
+            movieCoreVM.addToFavorite(movieID: filmId, movie: movie)
         }
-        else{  // delete from favourite
-            MovieFav.tintColor = UIColor.white
-        //    core?.deleteFromFavourite(id: filmId)
+        else
+        {
+            favButton.tintColor = UIColor.white
+            movieCoreVM.deleteFromFavorite(movieID: filmId)
         }
     }
-
-//    func shwoTrailers()
-//    {
-//        
-//        api.getMoviesData(url: "https://api.themoviedb.org/3/movie/"+String(filmId)+"/videos?api_key=d52a9c41632a8b38d8c0dd5b5652b937&language=en-US",appendFlag: 0) { (result) in
-//            self.trailers = result
-//            self.youtubeCollection.reloadData()
-//            
-//        }
-//        
-//    }
+    
+    func shwoTrailers()
+    {
+        movieDetailsVM.getMovieTrailers(url: Constants.movieTrailerPath+String(filmId)+Constants.movieTrailerPath2) { (result) in
+            self.trailers = result
+        }
+    }
     
     func openTrailerOnYoutube(key:String)
         
@@ -96,14 +88,14 @@ class MovieDetailsController: UIViewController {
             url = URL(string: "https://www.youtube.com/watch?v=\(key)")!  // youtube app on phone
         }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)  // youtube on browser
-        
     }
     
-//    func showReviews()
-//    {
-//        api.getMoviesData(url: reviewPath+String(filmId)+reviewPath2,appendFlag: 0) { (result) in
-//            self.reviewsArr = result
-//            self.reviewsCollection.reloadData()
-//        }
-//    }
+    func showReviews()
+    {
+        
+        movieDetailsVM.getMovieReviews(url: Constants.reviewPath+String(filmId)+Constants.reviewPath2) { (result) in
+            self.reviewsArr = result
+        }
+        
+    }
 }
