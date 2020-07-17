@@ -75,7 +75,7 @@ extension Home:UICollectionViewDelegate{
         // movies collection
         if collectionView.tag == 0
         {
-            index = indexPath.row
+            index = indexPath
             performSegue(withIdentifier: "detail", sender:self)
         }
             // menu collection

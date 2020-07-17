@@ -13,12 +13,13 @@ class Home: UIViewController {
     @IBOutlet weak var connectivity: UIBarButtonItem!
     @IBOutlet weak var homeTitle: UIBarButtonItem!
     @IBOutlet weak var collection: UICollectionView!
-    var index:Int = -1
+    var index:IndexPath!
     let cellId = "cell"
     var blackView:UIView!
     var collectionMenu:UICollectionView!
     let homeVM:MoviesStore = MoviesStore(moviesData:MoviesDataAccess())
     let localHomeVM:MoviesStore = MoviesStore(coreData: CoreData())
+    var indicator:UIActivityIndicatorView!
     var movies:[HomeVM] = []{
         didSet{
             self.collection.reloadData()
@@ -34,13 +35,18 @@ class Home: UIViewController {
         setupMoviesCollection()
         setupCollectionMenu()
         connectivity.image = UIImage.init(named: "connection")
+        indicator = UIActivityIndicatorView(style: .whiteLarge)
+        indicator.center = view.center
+        view.addSubview(indicator)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         if Networking.checkNetwork()
         {
+            indicator.startAnimating()
             homeVM.getmovies(by:Constants.moviesUrl, appendFlag: 1, completion: { [weak self](results) in
                 self?.movies = results
+                self?.indicator.stopAnimating()
             })
             connectivity.tintColor = UIColor.green
         }
@@ -66,7 +72,7 @@ class Home: UIViewController {
         // segue preparation
         override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
             let detail:MovieDetailsController = segue.destination as! MovieDetailsController
-            detail.filmId = movies[index].id
+            detail.filmId = movies[index.row].id
         }
     
 }

@@ -47,13 +47,13 @@ class ReachabilityManager: NSObject {
         case .reachableViaWiFi:
             DispatchQueue.main.async {
                 // Don't do anything here
-                print(" connection www")
+          //      print(" connection www")
                // self.connectivity.tintColor = UIColor.green
             }
         case .reachableViaWWAN:
             DispatchQueue.main.async {
                 // Don't do anything here
-                print(" connection nn")
+          //      print(" connection nn")
               //  self.connectivity.tintColor = UIColor.green
             }
         }

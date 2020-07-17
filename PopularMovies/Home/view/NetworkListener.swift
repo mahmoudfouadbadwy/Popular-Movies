@@ -20,7 +20,7 @@ extension Home: NetworkStatusListener {
             DispatchQueue.main.async {
                 print(" reachable wifi")
                 self.connectivity.tintColor = UIColor.green
-                self.homeVM.getmovies(by: Constants.imagePath, appendFlag: 0, completion: {[weak self] results in
+                self.homeVM.getmovies(by: Constants.moviesUrl, appendFlag: 0, completion: {[weak self] results in
                     self?.movies = results
                 })
             }
@@ -28,7 +28,7 @@ extension Home: NetworkStatusListener {
             DispatchQueue.main.async {
                  print(" reachable WWAN")
                 self.connectivity.tintColor = UIColor.green
-                self.homeVM.getmovies(by: Constants.imagePath, appendFlag: 0, completion: {[weak self] results in
+                self.homeVM.getmovies(by: Constants.moviesUrl, appendFlag: 0, completion: {[weak self] results in
                     self?.movies = results
                 })
 

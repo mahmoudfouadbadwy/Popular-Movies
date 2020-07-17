@@ -50,9 +50,9 @@ class MoviesStore{
     
     func getLocalMovies()-> [HomeVM]
     {
-      return coreData.getFromMovies().map { (result) in
+     return coreData.getFromMovies().map { (result) in
             movie = Movie(id: result.value(forKey: "id") as? Int ?? 0, originalTitle: result.value(forKey: "name") as? String ?? "", overview: result.value(forKey: "overview") as? String ?? "", posterPath: result.value(forKey: "image") as? String ?? "", voteAverage: result.value(forKey: "frate") as? Double ?? 0.0, releaseDate: result.value(forKey: "frelease") as? String ?? "")
-         return HomeVM(movie: movie)
+            return HomeVM(movie: movie)
         }
     }
     

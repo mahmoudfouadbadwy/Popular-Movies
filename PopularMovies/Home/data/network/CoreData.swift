@@ -44,7 +44,6 @@ class CoreData{
     
     func getFromMovies()-> [NSManagedObject]{
         do{
-            
             movies =  try managedContext.fetch(fetchRequest)
         }
         catch let error as NSError{
