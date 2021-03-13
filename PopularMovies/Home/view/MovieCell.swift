@@ -7,7 +7,13 @@
 //
 
 import UIKit
+import SDWebImage
 
 class MovieCell: UICollectionViewCell {
-    @IBOutlet weak var poster: UIImageView!
+ 
+    @IBOutlet private weak var poster: UIImageView!
+    
+    func configCell(imagePath: String) {
+        poster.sd_setImage(with: URL(string: Constants.imagePath + imagePath),placeholderImage:UIImage.init(named: "loading.png"))
+    }
 }

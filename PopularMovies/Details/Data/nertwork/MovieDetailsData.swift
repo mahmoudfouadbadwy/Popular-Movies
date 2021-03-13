@@ -19,7 +19,7 @@ class MovieDetailsData{
             {[weak self]
                 (operation, responseObject) in
                 let result:Dictionary<String,Any> = responseObject as! Dictionary<String,Any>
-                self?.movie = Movie(popularity:result["popularity"] as! Double, voteCount: result["vote_count"] as! Int, posterPath: result["poster_path"] as! String, id: result["id"] as! Int, originalTitle: result["original_title"] as! String, title: result["title"] as! String, voteAverage: result["vote_average"] as! Double, overview: result["overview"] as! String, releaseDate: result["release_date"] as! String)
+//                self?.movie = Movie(popularity:result["popularity"] as! Double, voteCount: result["vote_count"] as! Int, posterPath: result["poster_path"] as! String, id: result["id"] as! Int, originalTitle: result["original_title"] as! String, title: result["title"] as! String, voteAverage: result["vote_average"] as! Double, overview: result["overview"] as! String, releaseDate: result["release_date"] as! String)
                 completion(self!.movie)
             },
             failure:

@@ -46,8 +46,8 @@ class MovieCoreVM{
     }
     
     func addToFavorite(movieID:Int,movie:MovieDetails){
-        self.movie = Movie(id: movieID, originalTitle: movie.title, overview: movie.overview, posterPath: movie.poster, voteAverage: movie.rate, releaseDate: movie.release)
-        coreData.addToFavourite(movie: self.movie)
+//        self.movie = Movie(id: movieID, originalTitle: movie.title, overview: movie.overview, posterPath: movie.poster, voteAverage: movie.rate, releaseDate: movie.release)
+//        coreData.addToFavourite(movie: self.movie)
     }
     func deleteFromFavorite(movieID:Int){
         self.coreData.deleteFromFavourite(id: movieID)

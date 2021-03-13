@@ -3,35 +3,60 @@
 //  PopularMovies
 //
 //  Created by Mahmoud Fouad on 6/10/20.
-//  Copyright © 2020 Mahmoud fouad. All rights reserved.
+//  Copyright © 2020 Mahmoud Fouad. All rights reserved.
 //
 
 import Foundation
 
-struct Movie{
-    let popularity: Double
-    let voteCount: Int
-    let posterPath: String
+struct MoviesData: Codable {
+    
+    let page: Int
+    let movies: [Movie]
+    let totalPages, totalResults: Int
+    
+    enum CodingKeys: String, CodingKey {
+        case page
+        case movies = "results"
+        case totalPages = "total_pages"
+        case totalResults = "total_results"
+    }
+}
+
+
+struct Movie: Codable {
+    
+    let adult: Bool
+    let backdropPath: String
+    let genreIDS: [Int]
     let id: Int
-    let originalTitle: String
-    let title: String
+    let originalLanguage, originalTitle, overview: String
+    let popularity: Double
+    let posterPath, releaseDate, title: String
+    let video: Bool
     let voteAverage: Double
-    let overview:String
-    let releaseDate: String
+    let voteCount: Int
     
-    init(popularity: Double,voteCount: Int,posterPath: String,id: Int,originalTitle: String,title: String,voteAverage: Double,overview:String, releaseDate: String) {
-        self.popularity = popularity
-        self.voteCount = voteCount
-        self.posterPath = posterPath
-        self.id = id
-        self.originalTitle = originalTitle
-        self.title = title
-        self.voteAverage = voteAverage
-        self.overview = overview
-        self.releaseDate = releaseDate
+    enum CodingKeys: String, CodingKey {
+        case adult
+        case backdropPath = "backdrop_path"
+        case genreIDS = "genre_ids"
+        case id
+        case originalLanguage = "original_language"
+        case originalTitle = "original_title"
+        case overview, popularity
+        case posterPath = "poster_path"
+        case releaseDate = "release_date"
+        case title, video
+        case voteAverage = "vote_average"
+        case voteCount = "vote_count"
     }
-    
-    init(id:Int,originalTitle: String,overview:String,posterPath: String,voteAverage: Double,releaseDate: String) {
-        self.init(popularity: 0.0, voteCount: 0, posterPath: posterPath, id: id, originalTitle: originalTitle, title: "", voteAverage: voteAverage, overview: overview, releaseDate: releaseDate)
-    }
+}
+
+struct MovieViewModel {
+    var moviePoster: String
+    var id: Int
+    var originalTitle: String
+    var overview: String
+    var voteAverage: Double
+    var releaseDate: String
 }

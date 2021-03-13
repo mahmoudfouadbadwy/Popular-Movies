@@ -16,7 +16,7 @@ extension MovieDetailsController {
 }
 extension MovieDetailsController:UICollectionViewDataSource{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if Networking.checkNetwork()
+        if Networking.isNetworkEnabled()
         {
             if collectionView.tag == 1
             {
@@ -43,7 +43,7 @@ extension MovieDetailsController:UICollectionViewDataSource{
         if collectionView.tag == 1  // reviews
         {
             let cell:RevCell = collectionView.dequeueReusableCell(withReuseIdentifier: "revCell", for: indexPath) as! RevCell
-            if Networking.checkNetwork()
+            if Networking.isNetworkEnabled()
             {
                 if reviewsArr.count == 0
                 {
@@ -67,7 +67,7 @@ extension MovieDetailsController:UICollectionViewDataSource{
         else   // trailers
         {
             let cell:YoutubeCell = collectionView.dequeueReusableCell(withReuseIdentifier: "youtubecell", for: indexPath) as! YoutubeCell
-            if Networking.checkNetwork()
+            if Networking.isNetworkEnabled()
             {
                 if trailers.count == 0
                 {
@@ -101,7 +101,7 @@ extension MovieDetailsController:UICollectionViewDelegate{
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView.tag == 0
         {
-            if Networking.checkNetwork()
+            if Networking.isNetworkEnabled()
             {
                 openTrailerOnYoutube(key: (trailers[indexPath.row]["key"]  as! String))
             }

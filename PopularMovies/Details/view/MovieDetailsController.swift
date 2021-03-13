@@ -48,7 +48,7 @@ class MovieDetailsController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        if Networking.checkNetwork()
+        if Networking.isNetworkEnabled()
         {
             showReviews()
             shwoTrailers()

@@ -16,14 +16,19 @@ PODS:
     - AFNetworking/NSURLSession
   - Cosmos (17.0.0)
   - ReachabilitySwift (3)
-  - SDWebImage (5.4.0):
-    - SDWebImage/Core (= 5.4.0)
-  - SDWebImage/Core (5.4.0)
+  - RxCocoa (4.5.0):
+    - RxSwift (>= 4.4.2, ~> 4.4)
+  - RxSwift (4.5.0)
+  - SDWebImage (5.10.4):
+    - SDWebImage/Core (= 5.10.4)
+  - SDWebImage/Core (5.10.4)
 
 DEPENDENCIES:
   - AFNetworking (~> 3.0)
   - Cosmos (~> 17.0)
   - ReachabilitySwift (~> 3.0)
+  - RxCocoa
+  - RxSwift (~> 4.5)
   - SDWebImage (~> 5.0)
 
 SPEC REPOS:
@@ -31,14 +36,18 @@ SPEC REPOS:
     - AFNetworking
     - Cosmos
     - ReachabilitySwift
+    - RxCocoa
+    - RxSwift
     - SDWebImage
 
 SPEC CHECKSUMS:
   AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
   Cosmos: 309e489f21ffc91a1eeecfebef7f817cd2fcfba6
   ReachabilitySwift: f5b9bb30a0777fac8f09ce8b067e32faeb29bb64
-  SDWebImage: 5bf6aec6481ae2a062bdc59f9d6c1d1e552090e0
+  RxCocoa: cbf70265dc65a981d4ac982e513c10cf23df24a0
+  RxSwift: f172070dfd1a93d70a9ab97a5a01166206e1c575
+  SDWebImage: c666b97e1fa9c64b4909816a903322018f0a9c84
 
-PODFILE CHECKSUM: 1e23ea7c81fd5cb0d3bc99ede3a5328e3940b45c
+PODFILE CHECKSUM: 025867982e9e5a650aa386a19619e2922f3cb8f7
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.9.3

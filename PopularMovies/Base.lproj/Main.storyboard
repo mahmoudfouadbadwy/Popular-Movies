@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="P9j-dk-cPh">
-    <device id="retina4_7" orientation="portrait" appearance="light"/>
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
@@ -8,16 +8,16 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Favourite-->
+        <!--Favorite View Controller-->
         <scene sceneID="pg8-bX-ADz">
             <objects>
                 <viewController id="Ia2-HR-pSH" customClass="FavoriteViewController" customModule="PopularMovies" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="QHT-74-Fck">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="618"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="813"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="pVG-BA-KKS">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="618"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="813"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <viewLayoutGuide key="safeArea" id="X1p-b2-vPn"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Oxz-Tx-D8W">
@@ -28,7 +28,7 @@
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="favouriteCell" id="W2x-ed-hSQ" customClass="FavouriteCell" customModule="PopularMovies" customModuleProvider="target">
-                                        <rect key="frame" x="1.5" y="0.0" width="372" height="94"/>
+                                        <rect key="frame" x="21" y="0.0" width="372" height="94"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                             <rect key="frame" x="0.0" y="0.0" width="372" height="94"/>
@@ -67,7 +67,9 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="XEi-7D-TgK"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Favourite" image="favorite" id="G2U-rw-ifp"/>
+                    <tabBarItem key="tabBarItem" systemItem="favorites" id="G2U-rw-ifp">
+                        <color key="badgeColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBarItem>
                     <connections>
                         <outlet property="favCollection" destination="pVG-BA-KKS" id="iII-ky-lrM"/>
                         <segue destination="aen-Ml-dQ1" kind="show" identifier="favDetails" id="fQI-8Z-91P"/>
@@ -80,33 +82,14 @@
         <!--Home-->
         <scene sceneID="2gD-9n-A1d">
             <objects>
-                <viewController id="Aqz-wp-00J" customClass="Home" customModule="PopularMovies" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Home" id="Aqz-wp-00J" customClass="HomeViewController" customModule="PopularMovies" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="rOG-mC-yhm">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="618"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="813"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" barStyle="black" translatesAutoresizingMaskIntoConstraints="NO" id="LqL-uy-BQH">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
-                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <items>
-                                    <barButtonItem enabled="NO" title="Popular Movies" style="plain" id="oEH-xc-syz">
-                                        <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="Gb4-8Q-Cuz"/>
-                                    <barButtonItem title="Item" id="A3f-n4-g0b">
-                                        <color key="tintColor" red="0.0" green="0.97680455450000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    </barButtonItem>
-                                    <barButtonItem image="dots" id="cJr-dD-ER8">
-                                        <connections>
-                                            <action selector="menuClick:" destination="Aqz-wp-00J" id="q9J-PE-aCA"/>
-                                        </connections>
-                                    </barButtonItem>
-                                </items>
-                                <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            </toolbar>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="D69-E8-6i1">
-                                <rect key="frame" x="0.0" y="44" width="375" height="574"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="D69-E8-6i1">
+                                <rect key="frame" x="0.0" y="88" width="414" height="725"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="WaC-JZ-5DE">
                                     <size key="itemSize" width="342" height="218"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -115,7 +98,7 @@
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="MovieCell" id="glA-Qg-szQ" customClass="MovieCell" customModule="PopularMovies" customModuleProvider="target">
-                                        <rect key="frame" x="16.5" y="0.0" width="342" height="218"/>
+                                        <rect key="frame" x="36" y="0.0" width="342" height="218"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                             <rect key="frame" x="0.0" y="0.0" width="342" height="218"/>
@@ -144,38 +127,33 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="LqL-uy-BQH" firstAttribute="width" secondItem="rOG-mC-yhm" secondAttribute="width" id="4jY-We-8Jf"/>
                             <constraint firstItem="wsb-dE-vQ4" firstAttribute="bottom" secondItem="D69-E8-6i1" secondAttribute="bottom" id="6lE-k9-rzZ"/>
-                            <constraint firstItem="LqL-uy-BQH" firstAttribute="top" secondItem="wsb-dE-vQ4" secondAttribute="top" id="9Ii-BP-x0T"/>
                             <constraint firstItem="D69-E8-6i1" firstAttribute="leading" secondItem="wsb-dE-vQ4" secondAttribute="leading" id="eoV-oH-2uQ"/>
                             <constraint firstItem="wsb-dE-vQ4" firstAttribute="trailing" secondItem="D69-E8-6i1" secondAttribute="trailing" id="kfj-RG-UR8"/>
-                            <constraint firstItem="D69-E8-6i1" firstAttribute="top" secondItem="LqL-uy-BQH" secondAttribute="bottom" id="wC0-zs-0oC"/>
-                            <constraint firstItem="LqL-uy-BQH" firstAttribute="leading" secondItem="wsb-dE-vQ4" secondAttribute="leading" id="ymk-AA-hpD"/>
+                            <constraint firstItem="D69-E8-6i1" firstAttribute="top" secondItem="wsb-dE-vQ4" secondAttribute="top" id="lPg-G6-BBw"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="wsb-dE-vQ4"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Home" image="home" id="9zK-UD-B9V"/>
+                    <navigationItem key="navigationItem" title="Home" id="dOj-eA-0YB"/>
                     <connections>
                         <outlet property="collection" destination="D69-E8-6i1" id="zW2-Y7-MDX"/>
-                        <outlet property="connectivity" destination="A3f-n4-g0b" id="hpV-Wp-Yn1"/>
-                        <outlet property="homeTitle" destination="oEH-xc-syz" id="Ipc-JN-1Kl"/>
                         <segue destination="aen-Ml-dQ1" kind="show" identifier="detail" id="NRo-vO-2ze"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CXG-yV-7dT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="548" y="-108"/>
+            <point key="canvasLocation" x="1457.9710144927537" y="-108.48214285714285"/>
         </scene>
         <!--Movie Details Controller-->
         <scene sceneID="fOS-6h-x8m">
             <objects>
                 <viewController id="aen-Ml-dQ1" customClass="MovieDetailsController" customModule="PopularMovies" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="t8A-j3-EqT">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" alpha="0.69999999999999996" contentMode="scaleToFill" barStyle="black" translatesAutoresizingMaskIntoConstraints="NO" id="ulQ-Jb-UiB">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <items>
                                     <barButtonItem image="left-arrow" id="cuj-Nu-Ga8">
@@ -191,23 +169,23 @@
                                 </items>
                             </toolbar>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Name Available" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cqn-eE-Ghf">
-                                <rect key="frame" x="0.0" y="44" width="375" height="52"/>
+                                <rect key="frame" x="0.0" y="44" width="414" height="67.5"/>
                                 <color key="backgroundColor" red="1" green="0.57637232540000005" blue="0.0" alpha="0.80155714897260277" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="notfound" translatesAutoresizingMaskIntoConstraints="NO" id="KgP-1v-TbC">
-                                <rect key="frame" x="20" y="106" width="169" height="181"/>
+                                <rect key="frame" x="20" y="121.5" width="186.5" height="235.5"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Release Data Available" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pwY-07-twv">
-                                <rect key="frame" x="215" y="126" width="150" height="32"/>
+                                <rect key="frame" x="238.5" y="141.5" width="165.5" height="42"/>
                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="20"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="duy-DB-WU6" customClass="CosmosView" customModule="Cosmos">
-                                <rect key="frame" x="215" y="178" width="150" height="32.5"/>
+                                <rect key="frame" x="238.5" y="203.5" width="165.5" height="42"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="rating">
@@ -228,7 +206,7 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sk7-Yk-ReO">
-                                <rect key="frame" x="267.5" y="220.5" width="37.5" height="32.5"/>
+                                <rect key="frame" x="302.5" y="255.5" width="41.5" height="42"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" title="Button" image="heart">
@@ -239,7 +217,7 @@
                                 </connections>
                             </button>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="1pb-d2-zoW">
-                                <rect key="frame" x="0.0" y="514" width="375" height="133"/>
+                                <rect key="frame" x="0.0" y="646.5" width="414" height="161.5"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="cc6-57-O5p">
                                     <size key="itemSize" width="375" height="111"/>
@@ -249,7 +227,7 @@
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="youtubecell" id="LtH-c8-HBe" customClass="YoutubeCell" customModule="PopularMovies" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="111"/>
+                                        <rect key="frame" x="19.5" y="0.0" width="375" height="111"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="111"/>
@@ -286,14 +264,14 @@
                                 </cells>
                             </collectionView>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="No OverView Available" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="oMU-up-geb">
-                                <rect key="frame" x="5" y="297" width="365" height="77.5"/>
+                                <rect key="frame" x="5" y="367" width="404" height="101"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="1" contentMode="scaleToFill" pagingEnabled="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Kd3-ce-lBi">
-                                <rect key="frame" x="0.0" y="384.5" width="375" height="129.5"/>
+                                <rect key="frame" x="0.0" y="478" width="414" height="168.5"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="E6d-qz-anz">
                                     <size key="itemSize" width="375" height="134"/>
@@ -303,7 +281,7 @@
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="revCell" id="TK5-il-Cw3" customClass="RevCell" customModule="PopularMovies" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="-2.5" width="375" height="134"/>
+                                        <rect key="frame" x="0.0" y="17.5" width="375" height="134"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="134"/>
@@ -396,6 +374,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="pjd-Te-lZP"/>
                     </view>
+                    <navigationItem key="navigationItem" id="eih-yW-GEU"/>
                     <connections>
                         <outlet property="cosmosview" destination="duy-DB-WU6" id="Ntz-x9-rnm"/>
                         <outlet property="favButton" destination="sk7-Yk-ReO" id="Yjs-ki-WS1"/>
@@ -409,7 +388,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Mqc-Nz-cUg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1352.8" y="-96.7016491754123"/>
+            <point key="canvasLocation" x="2601.449275362319" y="172.76785714285714"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="SiB-Qe-C5N">
@@ -418,27 +397,55 @@
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" barStyle="black" translucent="NO" id="wEz-Ji-0z2">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="barTintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="selectedImageTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
                     <connections>
-                        <segue destination="Aqz-wp-00J" kind="relationship" relationship="viewControllers" id="oyt-Pz-9tH"/>
+                        <segue destination="UOz-gI-7fK" kind="relationship" relationship="viewControllers" id="oyt-Pz-9tH"/>
                         <segue destination="Ia2-HR-pSH" kind="relationship" relationship="viewControllers" id="cy7-DK-Axk"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hsz-Xx-iMq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-449" y="197"/>
+            <point key="canvasLocation" x="-333" y="195"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="xt7-km-bje">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="UOz-gI-7fK" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="" systemItem="mostViewed" id="9zK-UD-B9V">
+                        <color key="badgeColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBarItem>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="3tT-NZ-XO8">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="barTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </textAttributes>
+                        <textAttributes key="largeTitleTextAttributes">
+                            <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </textAttributes>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="Aqz-wp-00J" kind="relationship" relationship="rootViewController" id="5Pv-HZ-oh8"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="V6M-la-DxC" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="547.82608695652175" y="-108.48214285714285"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="NRo-vO-2ze"/>
+        <segue reference="fQI-8Z-91P"/>
     </inferredMetricsTieBreakers>
     <resources>
-        <image name="dots" width="30" height="30"/>
-        <image name="favorite" width="30" height="30"/>
         <image name="heart" width="512" height="512"/>
-        <image name="home" width="30" height="30"/>
         <image name="left-arrow" width="24" height="24"/>
         <image name="loading" width="225" height="225"/>
         <image name="notfound" width="300" height="168"/>

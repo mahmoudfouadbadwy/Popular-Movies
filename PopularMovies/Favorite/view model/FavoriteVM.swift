@@ -18,7 +18,7 @@ class FavoriteVM{
     func getFavorites()->[Favorite]
     {
      return coreData.getFavouriteMovies().map {[weak self] (result)  in
-            self?.movie = Movie(id: result.value(forKey: "id") as? Int ?? 0, originalTitle: result.value(forKey: "name") as? String ?? "", overview: result.value(forKey: "overview") as? String ?? "", posterPath: result.value(forKey: "image") as? String ?? "", voteAverage: result.value(forKey: "frate") as? Double ?? 0.0, releaseDate: result.value(forKey: "frelease") as? String ?? "")
+//            self?.movie = Movie(id: result.value(forKey: "id") as? Int ?? 0, originalTitle: result.value(forKey: "name") as? String ?? "", overview: result.value(forKey: "overview") as? String ?? "", posterPath: result.value(forKey: "image") as? String ?? "", voteAverage: result.value(forKey: "frate") as? Double ?? 0.0, releaseDate: result.value(forKey: "frelease") as? String ?? "")
             return Favorite(movie: movie)
         }
     }
