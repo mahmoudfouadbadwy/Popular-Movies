@@ -22,7 +22,7 @@ class MovieDetailsController: UIViewController {
     var movie:MovieDetails!
     var movieDetailsVM:MovieDetailsVM!
     var movieData:MovieDetailsData!
-    var movieCore:CoreData!
+    var movieCore:LocalStorage!
     var movieCoreVM:MovieCoreVM!
     var trailers:[Dictionary<String,Any>]!=[] {
         didSet{
@@ -43,7 +43,7 @@ class MovieDetailsController: UIViewController {
             self.movie = result
             self.bindDetails()
         }
-        self.movieCore = CoreData()
+    //    self.movieCore = LocalStorage()
         self.movieCoreVM = MovieCoreVM(movieCoreData: movieCore)
     }
     

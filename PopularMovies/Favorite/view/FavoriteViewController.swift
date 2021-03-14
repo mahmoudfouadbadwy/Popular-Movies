@@ -11,7 +11,7 @@ import SDWebImage
 
 class FavoriteViewController: UIViewController{
     @IBOutlet weak var favCollection: UICollectionView!
-    var coreData:CoreData!
+    var coreData:LocalStorage!
     var favVM:FavoriteVM!
     var index:Int = -1
     var movies:[Favorite]=[]{
@@ -23,7 +23,7 @@ class FavoriteViewController: UIViewController{
         super.viewDidLoad()
         favCollection.delegate = self
         favCollection.dataSource = self
-        self.coreData = CoreData()
+        //self.coreData = LocalStorage()
         self.favVM = FavoriteVM(coreDate: coreData)
     }
     override func viewWillAppear(_ animated: Bool) {

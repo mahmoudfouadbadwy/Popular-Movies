@@ -15,11 +15,10 @@ protocol MoviesBusiness {
     
     var movies: BehaviorRelay<[MovieViewModel]> {get}
     var isPopularMovies: Bool {get set}
-    func getMoviesIn(page: Int)
     func getPopularMovies()
-    func getTopRatedMoviesIn(page: Int)
     func getTopRatedMovies()
     func getMoviesInNext(page: Int)
+    func saveMovieInStorage(movie: MovieViewModel)
     
 }
 
@@ -28,9 +27,9 @@ class MoviesViewModel: MoviesBusiness {
     var isPopularMovies = true
     var movies: BehaviorRelay<[MovieViewModel]> = BehaviorRelay(value: [])
     private let bag = DisposeBag()
+    private let storage = LocalStorage.shared
     
-    func getMoviesIn(page: Int)
-    {
+    private func getMoviesIn(page: Int) {
         MoviesWorker
             .getMovies(page: page)
             .subscribe(onNext: {[weak self] movies in
@@ -49,7 +48,8 @@ class MoviesViewModel: MoviesBusiness {
         if Networking.isNetworkEnabled() {
             getMoviesIn(page: 1)
         } else {
-            
+            let offlineMovies = getOfflineMovies()
+            movies.accept(offlineMovies)
         }
     }
     
@@ -57,11 +57,13 @@ class MoviesViewModel: MoviesBusiness {
         if Networking.isNetworkEnabled() {
             getTopRatedMoviesIn(page: 1)
         } else {
-            
+            let offlineMovies = getOfflineMovies()
+            let topMovies = offlineMovies.sorted { Double(truncating: $0.voteAverage as NSNumber) > Double(truncating: $1.voteAverage as NSNumber) }
+            movies.accept(topMovies)
         }
     }
     
-    func getTopRatedMoviesIn(page: Int) {
+    private func getTopRatedMoviesIn(page: Int) {
         MoviesWorker
             .getTopMovies(page: page)
             .subscribe(onNext: {[weak self] movies in
@@ -77,23 +79,30 @@ class MoviesViewModel: MoviesBusiness {
     }
     
     func getMoviesInNext(page: Int) {
-        isPopularMovies ? getMoviesIn(page: page) : getTopRatedMoviesIn(page: page)
+        if Networking.isNetworkEnabled() {
+            isPopularMovies ? getMoviesIn(page: page) : getTopRatedMoviesIn(page: page)
+        }
     }
     
+    func saveMovieInStorage(movie: MovieViewModel) {
+        if Networking.isNetworkEnabled() && storage.moviesCount <= 60 {
+            storage.add(movie: movie)
+        }
+    }
     
-    //    func getLocalMovies()-> [HomeVM]
-    //    {
-    //     return coreData.getFromMovies().map { (result) in
-    //            movie = Movie(id: result.value(forKey: "id") as? Int ?? 0, originalTitle: result.value(forKey: "name") as? String ?? "", overview: result.value(forKey: "overview") as? String ?? "", posterPath: result.value(forKey: "image") as? String ?? "", voteAverage: result.value(forKey: "frate") as? Double ?? 0.0, releaseDate: result.value(forKey: "frelease") as? String ?? "")
-    //  return HomeVM(movie: movie)
-    //     }
-    //  }
-    
-//    func addMovieTolocalStorage(id:Int,name:String,overview:String,image:String,rate:Double,release:String)
-//    {
-//                let movie:Movie = Movie(id: id, originalTitle: name, overview: overview, posterPath: image, voteAverage: rate, releaseDate: release)
-//         coreData.addToStorage(mov: movie, flag: 0)
-//    }
+    private func getOfflineMovies() -> [MovieViewModel] {
+        let offlineMovies = storage.getMovies()
+            .map { (movie)  in
+                MovieViewModel(moviePoster: movie.value(forKey: "poster") as! String,
+                               id: movie.value(forKey: "id") as! Int,
+                               originalTitle: movie.value(forKey: "name") as! String,
+                               overview: movie.value(forKey: "overview") as! String,
+                               voteAverage: movie.value(forKey: "rate") as! Double,
+                               releaseDate: movie.value(forKey: "mRelease") as! String)
+        }
+        
+        return offlineMovies
+    }
 }
 
 

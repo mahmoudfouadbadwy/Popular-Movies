@@ -3,40 +3,44 @@
 //  PopularMovies
 //
 //  Created by Mahmoud Fouad on 1/5/20.
-//  Copyright © 2020 Mahmoud fouad. All rights reserved.
+//  Copyright © 2020 Mahmoud Fouad. All rights reserved.
 //
 import UIKit
 import CoreData
 
-class CoreData {
+class LocalStorage {
     
-    var movies: [NSManagedObject] = []
-    var appDelegate: AppDelegate
-    var managedContext: NSManagedObjectContext
-    var fetchRequest: NSFetchRequest<NSManagedObject>
+    private var movies: [NSManagedObject] = []
+    private var appDelegate: AppDelegate
+    private var managedContext: NSManagedObjectContext
+    private var fetchRequest: NSFetchRequest<NSManagedObject>
+    static let shared = LocalStorage()
+    var moviesCount: Int {
+        getMovies().count
+    }
     
-    init() {
+    private init() {
         appDelegate = UIApplication.shared.delegate as! AppDelegate
         managedContext = appDelegate.persistentContainer.viewContext
         fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Movies")
     }
     
-    func addToStorage(mov: Movie, flag: Int)
-    {
-        fetchRequest.predicate = NSPredicate.init(format:"id == \(mov.id)")
-        if let result = try? managedContext.fetch(fetchRequest){
+    func add(movie value: MovieViewModel, isFavorite: Bool = false)  {
+        fetchRequest.predicate = NSPredicate.init(format:"id == \(value.id)")
+        if let result = try? managedContext.fetch(fetchRequest) {
             if result.count == 0 {
                 let entity = NSEntityDescription.entity(forEntityName: "Movies", in: managedContext)
                 let movie = NSManagedObject(entity: entity!, insertInto: managedContext)
-                movie.setValue(mov.id, forKey: "id")
-                movie.setValue(mov.originalTitle, forKey: "name")
-                movie.setValue(mov.posterPath, forKey: "image")
-                movie.setValue(mov.voteAverage, forKey: "frate")
-                movie.setValue(mov.releaseDate, forKey: "frelease")
-                movie.setValue(mov.overview, forKey: "overview")
-                movie.setValue(flag, forKey: "flag")
+                movie.setValue(value.id, forKey: "id")
+                movie.setValue(value.originalTitle, forKey: "name")
+                movie.setValue(value.moviePoster, forKey: "poster")
+                movie.setValue(value.voteAverage, forKey: "rate")
+                movie.setValue(value.releaseDate, forKey: "mRelease")
+                movie.setValue(value.overview, forKey: "overview")
+                movie.setValue(isFavorite, forKey: "isFavorite")
                 do{
-                    try managedContext.save()
+                     try managedContext.save()
+                    print("Movie saved successfully")
                 }
                 catch let error as NSError{
                     print("error saving in core data : \(error)")
@@ -45,8 +49,8 @@ class CoreData {
         }
     }
     
-    func getFromMovies() -> [NSManagedObject] {
-        do{
+    func getMovies() -> [NSManagedObject] {
+        do {
             movies =  try managedContext.fetch(fetchRequest)
         }
         catch let error as NSError{
@@ -57,7 +61,7 @@ class CoreData {
     
     func getFavouriteMovies()-> [NSManagedObject]
     {
-        fetchRequest.predicate =  NSPredicate.init(format:"flag == \(1)")
+        fetchRequest.predicate =  NSPredicate.init(format: "flag == \(1)")
         do{
             movies =  try managedContext.fetch(fetchRequest)
         }
@@ -74,7 +78,7 @@ class CoreData {
         if let result = try? managedContext.fetch(fetchRequest){
             if result.count == 0
             {
-                addToStorage(mov: movie, flag: 1)
+               // add(mov: movie, isFavorite: true)
             }
             else
             {

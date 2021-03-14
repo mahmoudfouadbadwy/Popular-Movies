@@ -9,9 +9,9 @@
 import Foundation
 
 class FavoriteVM{
-    var coreData:CoreData!
+    var coreData:LocalStorage!
     var movie:Movie!
-    init(coreDate:CoreData!) {
+    init(coreDate:LocalStorage!) {
         self.coreData = coreDate
     }
     

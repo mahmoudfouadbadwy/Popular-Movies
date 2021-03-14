@@ -32,21 +32,21 @@ class HomeViewController: UIViewController {
     //MARK:- Lifecycle
     override func viewDidLoad(){
         super.viewDidLoad()
-        moviesViewModel.getMoviesIn(page: 1)
+        moviesViewModel.getPopularMovies()
         observeMovies()
         setupUI()
     }
     
     
     //MARK:- segue preparation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let detail = segue.destination as? MovieDetailsController,
-            let cell = sender as? UICollectionViewCell ,
-            let indexPath = self.collection.indexPath(for: cell) else {
-                return
-        }
-        detail.filmId = movies[indexPath.row].id
-    }
+    //    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    //        guard let detail = segue.destination as? MovieDetailsController,
+    //            let cell = sender as? UICollectionViewCell ,
+    //            let indexPath = self.collection.indexPath(for: cell) else {
+    //                return
+    //        }
+    //        detail.filmId = movies[indexPath.row].id
+    //    }
     
     //MARK:- UI
     private func setupUI() {
@@ -90,19 +90,21 @@ class HomeViewController: UIViewController {
     @objc private func refreshMovies() {
         moviesViewModel.isPopularMovies = true
         movies = []
-        moviesViewModel.getMoviesIn(page: 1)
+        moviesViewModel.getPopularMovies()
     }
     
     @objc private func showSortingMenu() {
         let menu = UIAlertController(title: "Please select sorting type", message: "Option to select", preferredStyle: .actionSheet)
-        let highestButton = UIAlertAction(title: "Highest rated", style: .default) {[weak self] _ in
+        let popTitle = moviesViewModel.isPopularMovies ? "Popular  √" : "Popular"
+        let topTitle = moviesViewModel.isPopularMovies ? "Highest rated" : "Highest rated  √"
+        let highestButton = UIAlertAction(title: topTitle, style: .default) {[weak self] _ in
             self?.moviesViewModel.isPopularMovies = false
             self?.movies = []
             self?.moviesViewModel.getTopRatedMovies()
         }
         menu.addAction(highestButton)
         
-        let popularButton = UIAlertAction(title: "Popular", style: .default) {[weak self] _ in
+        let popularButton = UIAlertAction(title: popTitle, style: .default) {[weak self] _ in
             self?.moviesViewModel.isPopularMovies = true
             self?.movies = []
             self?.moviesViewModel.getPopularMovies()
@@ -129,6 +131,9 @@ extension HomeViewController: UICollectionViewDataSource
             return UICollectionViewCell()
         }
         cell.configCell(imagePath: movies[indexPath.row].moviePoster)
+        if movies.count <= 60 {
+            moviesViewModel.saveMovieInStorage(movie: movies[indexPath.row])
+        }
         return cell
     }
 }
@@ -136,7 +141,7 @@ extension HomeViewController: UICollectionViewDataSource
 extension HomeViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        //performSegue(withIdentifier: "detail", sender: self)
+        //        performSegue(withIdentifier: "detail", sender: self)
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
@@ -152,7 +157,6 @@ extension HomeViewController: UICollectionViewDelegate {
         
     }
 }
-
 
 extension HomeViewController: UICollectionViewDelegateFlowLayout
 {

@@ -36,9 +36,9 @@ class MovieDetailsVM{
 }
 
 class MovieCoreVM{
-    var coreData:CoreData!
+    var coreData:LocalStorage!
     var movie:Movie!
-    init(movieCoreData:CoreData) {
+    init(movieCoreData:LocalStorage) {
         self.coreData = movieCoreData
     }
     func checkIsFavoriteMovie(movieID:Int)->Int{

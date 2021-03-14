@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		3B0003C825F920AD00FB480E /* MoviesService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B0003C725F920AD00FB480E /* MoviesService.swift */; };
 		3B11222325FA3D3600DE8A1D /* MoviesWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B11222225FA3D3600DE8A1D /* MoviesWorker.swift */; };
+		3B66F3E125FE8AD300D70E6D /* MoviesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFB93C6C249193FB000EB13E /* MoviesViewModel.swift */; };
 		67A67E716CFD22D8CE59EDA8 /* Pods_PopularMovies.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE587FF50FFF22D22DCB7647 /* Pods_PopularMovies.framework */; };
 		BF3FF1D223BFD42400DD373F /* MovieDetailsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3FF1D123BFD42400DD373F /* MovieDetailsController.swift */; };
 		BF777E5A23BF6F1C0035E125 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF777E5923BF6F1C0035E125 /* AppDelegate.swift */; };
@@ -27,9 +28,8 @@
 		BF8F575B24A268E6001BF06B /* FavoriteVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8F575A24A268E6001BF06B /* FavoriteVM.swift */; };
 		BF8F575D24A27204001BF06B /* FavoriteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8F575C24A27204001BF06B /* FavoriteViewController.swift */; };
 		BF90B5C623C1406800FA2DF4 /* YoutubeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF90B5C523C1406800FA2DF4 /* YoutubeCell.swift */; };
-		BF9C0F0723C289CC0021203D /* CoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9C0F0623C289CC0021203D /* CoreData.swift */; };
+		BF9C0F0723C289CC0021203D /* LocalStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9C0F0623C289CC0021203D /* LocalStorage.swift */; };
 		BFB93C6B24917070000EB13E /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFB93C6A24917070000EB13E /* Movie.swift */; };
-		BFB93C6D249193FB000EB13E /* MoviesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFB93C6C249193FB000EB13E /* MoviesViewModel.swift */; };
 		BFB93C6F2491BCB0000EB13E /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFB93C6E2491BCB0000EB13E /* Constants.swift */; };
 		BFEA511E23C8DF9F00557E6B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BFEA511D23C8DF9F00557E6B /* Assets.xcassets */; };
 		BFFF5BB823C7EBC40060C394 /* RevCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFF5BB723C7EBC30060C394 /* RevCell.swift */; };
@@ -58,7 +58,7 @@
 		BF8F575A24A268E6001BF06B /* FavoriteVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteVM.swift; sourceTree = "<group>"; };
 		BF8F575C24A27204001BF06B /* FavoriteViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoriteViewController.swift; sourceTree = "<group>"; };
 		BF90B5C523C1406800FA2DF4 /* YoutubeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeCell.swift; sourceTree = "<group>"; };
-		BF9C0F0623C289CC0021203D /* CoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreData.swift; sourceTree = "<group>"; };
+		BF9C0F0623C289CC0021203D /* LocalStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalStorage.swift; sourceTree = "<group>"; };
 		BFB93C6A24917070000EB13E /* Movie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
 		BFB93C6C249193FB000EB13E /* MoviesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesViewModel.swift; sourceTree = "<group>"; };
 		BFB93C6E2491BCB0000EB13E /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -83,8 +83,11 @@
 		3B0003C625F91EF800FB480E /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				BFEA511D23C8DF9F00557E6B /* Assets.xcassets */,
+				BF777E6823BF6F300035E125 /* Info.plist */,
 				BF777E5923BF6F1C0035E125 /* AppDelegate.swift */,
 				BFB93C6E2491BCB0000EB13E /* Constants.swift */,
+				BF9C0F0623C289CC0021203D /* LocalStorage.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -126,8 +129,6 @@
 				BF777E6523BF6F300035E125 /* LaunchScreen.storyboard */,
 				BF777E7D23BF8FB10035E125 /* Splash.swift */,
 				BF777E5D23BF6F1D0035E125 /* Main.storyboard */,
-				BFEA511D23C8DF9F00557E6B /* Assets.xcassets */,
-				BF777E6823BF6F300035E125 /* Info.plist */,
 				BF777E6023BF6F1D0035E125 /* PopularMovies.xcdatamodeld */,
 			);
 			path = PopularMovies;
@@ -225,7 +226,6 @@
 		BF99CD79248DAC3200510D92 /* model */ = {
 			isa = PBXGroup;
 			children = (
-				BF9C0F0623C289CC0021203D /* CoreData.swift */,
 				BFB93C6A24917070000EB13E /* Movie.swift */,
 			);
 			path = model;
@@ -397,12 +397,12 @@
 				BF3FF1D223BFD42400DD373F /* MovieDetailsController.swift in Sources */,
 				BFFF5BB823C7EBC40060C394 /* RevCell.swift in Sources */,
 				BF777E7723BF7D900035E125 /* HomeViewController.swift in Sources */,
-				BF9C0F0723C289CC0021203D /* CoreData.swift in Sources */,
+				BF9C0F0723C289CC0021203D /* LocalStorage.swift in Sources */,
+				3B66F3E125FE8AD300D70E6D /* MoviesViewModel.swift in Sources */,
 				BF777E7923BF7DD90035E125 /* MovieCell.swift in Sources */,
 				3B11222325FA3D3600DE8A1D /* MoviesWorker.swift in Sources */,
 				BF79535423C35C22000CEEDB /* FavouriteCell.swift in Sources */,
 				BF777E5A23BF6F1C0035E125 /* AppDelegate.swift in Sources */,
-				BFB93C6D249193FB000EB13E /* MoviesViewModel.swift in Sources */,
 				BF777E7E23BF8FB10035E125 /* Splash.swift in Sources */,
 				BF8F575924A266D9001BF06B /* FavoriteCollection.swift in Sources */,
 			);
@@ -552,7 +552,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = PopularMovies/Info.plist;
+				INFOPLIST_FILE = PopularMovies/Utilities/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -571,7 +571,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = PopularMovies/Info.plist;
+				INFOPLIST_FILE = PopularMovies/Utilities/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
