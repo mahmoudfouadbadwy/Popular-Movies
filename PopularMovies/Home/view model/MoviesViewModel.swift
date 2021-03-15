@@ -12,14 +12,12 @@ import RxCocoa
 
 
 protocol MoviesBusiness {
-    
     var movies: BehaviorRelay<[MovieViewModel]> {get}
     var isPopularMovies: Bool {get set}
     func getPopularMovies()
     func getTopRatedMovies()
     func getMoviesInNext(page: Int)
     func saveMovieInStorage(movie: MovieViewModel)
-    
 }
 
 class MoviesViewModel: MoviesBusiness {
@@ -39,13 +37,18 @@ class MoviesViewModel: MoviesBusiness {
                                    overview: movie.overview, voteAverage: movie.voteAverage,
                                    releaseDate: movie.releaseDate)
                 }
-                self?.movies.accept(moviesViewModel)
+                if page == 1 {
+                    self?.movies.accept(moviesViewModel)
+                } else {
+                    let result = (self?.movies.value ?? []) + moviesViewModel
+                    self?.movies.accept(result)
+                }
             })
             .disposed(by: bag)
     }
     
     func getPopularMovies() {
-        if Networking.isNetworkEnabled() {
+        if Networking.isNetworkEnabled {
             getMoviesIn(page: 1)
         } else {
             let offlineMovies = getOfflineMovies()
@@ -54,7 +57,7 @@ class MoviesViewModel: MoviesBusiness {
     }
     
     func getTopRatedMovies() {
-        if Networking.isNetworkEnabled() {
+        if Networking.isNetworkEnabled {
             getTopRatedMoviesIn(page: 1)
         } else {
             let offlineMovies = getOfflineMovies()
@@ -73,19 +76,24 @@ class MoviesViewModel: MoviesBusiness {
                                    overview: movie.overview, voteAverage: movie.voteAverage,
                                    releaseDate: movie.releaseDate)
                 }
-                self?.movies.accept(moviesViewModel)
+                if page == 1 {
+                    self?.movies.accept(moviesViewModel)
+                } else {
+                    let result = (self?.movies.value ?? []) + moviesViewModel
+                    self?.movies.accept(result)
+                }
             })
             .disposed(by: bag)
     }
     
     func getMoviesInNext(page: Int) {
-        if Networking.isNetworkEnabled() {
+        if Networking.isNetworkEnabled{
             isPopularMovies ? getMoviesIn(page: page) : getTopRatedMoviesIn(page: page)
         }
     }
     
     func saveMovieInStorage(movie: MovieViewModel) {
-        if Networking.isNetworkEnabled() && storage.moviesCount <= 60 {
+        if Networking.isNetworkEnabled && storage.moviesCount <= 60 {
             storage.add(movie: movie)
         }
     }

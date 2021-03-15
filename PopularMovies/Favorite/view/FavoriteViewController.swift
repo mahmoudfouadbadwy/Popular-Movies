@@ -3,7 +3,7 @@
 //  PopularMovies
 //
 //  Created by Mahmoud Fouad on 1/6/20.
-//  Copyright © 2020 Mahmoud fouad. All rights reserved.
+//  Copyright © 2020 Mahmoud Fouad. All rights reserved.
 //
 
 import UIKit
@@ -23,11 +23,11 @@ class FavoriteViewController: UIViewController{
         super.viewDidLoad()
         favCollection.delegate = self
         favCollection.dataSource = self
-        //self.coreData = LocalStorage()
+        self.coreData = LocalStorage.shared
         self.favVM = FavoriteVM(coreDate: coreData)
     }
     override func viewWillAppear(_ animated: Bool) {
-       movies = favVM.getFavorites()
+     //  movies = favVM.getFavorites()
      
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

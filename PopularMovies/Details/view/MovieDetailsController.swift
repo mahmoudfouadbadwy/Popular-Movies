@@ -36,23 +36,23 @@ class MovieDetailsController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupCollections()
-        self.movieData = MovieDetailsData()
-        self.movieDetailsVM = MovieDetailsVM(movieDetailsAccess: movieData)
-        self.movieDetailsVM.getMovieDetails(by: filmId) { (result) in
-            self.movie = result
-            self.bindDetails()
-        }
-    //    self.movieCore = LocalStorage()
-        self.movieCoreVM = MovieCoreVM(movieCoreData: movieCore)
+//        setupCollections()
+//        self.movieData = MovieDetailsData()
+//        self.movieDetailsVM = MovieDetailsVM(movieDetailsAccess: movieData)
+//        self.movieDetailsVM.getMovieDetails(by: filmId) { (result) in
+//            self.movie = result
+//            self.bindDetails()
+//        }
+//        self.movieCore = LocalStorage()
+//        self.movieCoreVM = MovieCoreVM(movieCoreData: movieCore)
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        if Networking.isNetworkEnabled()
-        {
-            showReviews()
-            shwoTrailers()
-        }
+//        if Networking.isNetworkEnabled
+//        {
+//            showReviews()
+//            shwoTrailers()
+//        }
     }
     
     @IBAction func backButton(_ sender: Any) {

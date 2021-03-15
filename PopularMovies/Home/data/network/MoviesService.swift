@@ -3,7 +3,7 @@
 //  PopularMovies
 //
 //  Created by Mahmoud Fouad on 3/10/21.
-//  Copyright © 2021 Mahmoud fouad. All rights reserved.
+//  Copyright © 2021 Mahmoud Fouad. All rights reserved.
 //
 
 import Foundation
@@ -16,7 +16,7 @@ class MoviesService {
     static func loadData(requestUrl: String) -> Observable<[Movie]> {
         
         return  Observable<[Movie]>.create { observer in
-        
+            
             let url = URL(string: requestUrl)!
             let request = URLRequest(url: url)
             let session = URLSession(configuration: .default)
@@ -47,25 +47,14 @@ class MoviesService {
     }
 }
 
-
-
-
 enum MoviesException: Error {
     case network
     case server
 }
 
-
 struct Networking {
-    static func isNetworkEnabled() -> Bool {
-        let reachability =  Reachability()
-        if (reachability?.isReachable)!{
-            return true
-        }
-        else
-        {
-            return false
-        }
+    static var isNetworkEnabled: Bool {
+        Reachability()?.isReachable ?? false
     }
 }
 

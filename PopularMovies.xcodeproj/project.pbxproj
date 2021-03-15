@@ -83,13 +83,32 @@
 		3B0003C625F91EF800FB480E /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				3BB7005F25FFE96D001B9E37 /* Splash screen */,
+				BF777E5D23BF6F1D0035E125 /* Main.storyboard */,
 				BFEA511D23C8DF9F00557E6B /* Assets.xcassets */,
 				BF777E6823BF6F300035E125 /* Info.plist */,
 				BF777E5923BF6F1C0035E125 /* AppDelegate.swift */,
 				BFB93C6E2491BCB0000EB13E /* Constants.swift */,
-				BF9C0F0623C289CC0021203D /* LocalStorage.swift */,
 			);
 			path = Utilities;
+			sourceTree = "<group>";
+		};
+		3BB7005E25FFE8E4001B9E37 /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				BF777E6023BF6F1D0035E125 /* PopularMovies.xcdatamodeld */,
+				BF9C0F0623C289CC0021203D /* LocalStorage.swift */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
+		3BB7005F25FFE96D001B9E37 /* Splash screen */ = {
+			isa = PBXGroup;
+			children = (
+				BF777E6523BF6F300035E125 /* LaunchScreen.storyboard */,
+				BF777E7D23BF8FB10035E125 /* Splash.swift */,
+			);
+			path = "Splash screen";
 			sourceTree = "<group>";
 		};
 		9621464FF55D186CA0EC5E53 /* Pods */ = {
@@ -123,13 +142,10 @@
 			isa = PBXGroup;
 			children = (
 				3B0003C625F91EF800FB480E /* Utilities */,
+				3BB7005E25FFE8E4001B9E37 /* Storage */,
 				BFE72056247DD0EC004A83F9 /* Favorite */,
 				BFE72055247DD0E0004A83F9 /* Details */,
 				BFE72054247DD0C6004A83F9 /* Home */,
-				BF777E6523BF6F300035E125 /* LaunchScreen.storyboard */,
-				BF777E7D23BF8FB10035E125 /* Splash.swift */,
-				BF777E5D23BF6F1D0035E125 /* Main.storyboard */,
-				BF777E6023BF6F1D0035E125 /* PopularMovies.xcdatamodeld */,
 			);
 			path = PopularMovies;
 			sourceTree = "<group>";

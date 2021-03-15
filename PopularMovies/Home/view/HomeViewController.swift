@@ -8,7 +8,7 @@
 
 import UIKit
 import RxSwift
-
+import RxCocoa
 
 class HomeViewController: UIViewController {
     
@@ -22,31 +22,15 @@ class HomeViewController: UIViewController {
     private let collectionCellId = "MovieCell"
     private let bag = DisposeBag()
     private let refreshControl = UIRefreshControl()
-    private var movies: [MovieViewModel] = []{
-        didSet {
-            self.collection.reloadData()
-            self.refreshControl.endRefreshing()
-        }
-    }
     
     //MARK:- Lifecycle
-    override func viewDidLoad(){
+    override func viewDidLoad() {
         super.viewDidLoad()
         moviesViewModel.getPopularMovies()
-        observeMovies()
+        bindMovies()
+        moviesAction()
         setupUI()
     }
-    
-    
-    //MARK:- segue preparation
-    //    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-    //        guard let detail = segue.destination as? MovieDetailsController,
-    //            let cell = sender as? UICollectionViewCell ,
-    //            let indexPath = self.collection.indexPath(for: cell) else {
-    //                return
-    //        }
-    //        detail.filmId = movies[indexPath.row].id
-    //    }
     
     //MARK:- UI
     private func setupUI() {
@@ -61,8 +45,10 @@ class HomeViewController: UIViewController {
         view.addSubview(indicator)
     }
     private func setupMoviesCollection() {
-        collection.delegate = self
-        collection.dataSource = self
+        collection
+            .rx
+            .setDelegate(self)
+            .disposed(by: bag)
         refreshControl.addTarget(self, action: #selector(refreshMovies), for: .valueChanged)
         refreshControl.attributedTitle = NSAttributedString(string: "pull to refresh")
         refreshControl.tintColor = .red
@@ -74,22 +60,8 @@ class HomeViewController: UIViewController {
         self.navigationItem.rightBarButtonItem = sortingButton
     }
     
-    //MARK:- UILogic
-    private func observeMovies() {
-        let movies = moviesViewModel.movies
-        movies
-            .observeOn(MainScheduler.instance)
-            .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
-            .subscribe(onNext: { [weak self] data in
-                self?.movies += data
-                print("movies count  = \(self?.movies.count ?? 0)")
-            })
-            .disposed(by: bag)
-    }
-    
     @objc private func refreshMovies() {
         moviesViewModel.isPopularMovies = true
-        movies = []
         moviesViewModel.getPopularMovies()
     }
     
@@ -99,14 +71,12 @@ class HomeViewController: UIViewController {
         let topTitle = moviesViewModel.isPopularMovies ? "Highest rated" : "Highest rated  √"
         let highestButton = UIAlertAction(title: topTitle, style: .default) {[weak self] _ in
             self?.moviesViewModel.isPopularMovies = false
-            self?.movies = []
             self?.moviesViewModel.getTopRatedMovies()
         }
         menu.addAction(highestButton)
         
         let popularButton = UIAlertAction(title: popTitle, style: .default) {[weak self] _ in
             self?.moviesViewModel.isPopularMovies = true
-            self?.movies = []
             self?.moviesViewModel.getPopularMovies()
         }
         menu.addAction(popularButton)
@@ -117,44 +87,56 @@ class HomeViewController: UIViewController {
         menu.addAction(cancelButton)
         self.present(menu, animated: true)
     }
-}
-
-
-
-extension HomeViewController: UICollectionViewDataSource
-{
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {  movies.count }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: collectionCellId, for: indexPath) as? MovieCell  else {
-            return UICollectionViewCell()
+    //MARK:- UILogic
+    private func bindMovies() {
+        moviesViewModel
+            .movies
+            .bind(to: collection.rx.items(cellIdentifier: collectionCellId, cellType: MovieCell.self)){
+                [weak self](row , item , cell) in
+                guard let self = self else { return }
+                self.refreshControl.endRefreshing()
+                cell.configCell(imagePath: item.moviePoster)
+                if self.moviesViewModel.movies.value.count <= 60 {
+                    self.moviesViewModel.saveMovieInStorage(movie: item)
+                }
         }
-        cell.configCell(imagePath: movies[indexPath.row].moviePoster)
-        if movies.count <= 60 {
-            moviesViewModel.saveMovieInStorage(movie: movies[indexPath.row])
+        .disposed(by: bag)
+    }
+    
+    private func moviesAction() {
+        collection
+            .rx
+            .modelSelected(MovieViewModel.self)
+            .subscribe(onNext: { [weak self] movie in
+                self?.routeToMovieDetails(with: movie)
+            })
+            .disposed(by: bag)
+    }
+    
+    //MARK:- Routing
+    private func routeToMovieDetails(with movie: MovieViewModel) {
+        guard let movieDetailsController = UIStoryboard(name: "Main",
+                                                        bundle: nil).instantiateViewController(withIdentifier: "MovieDetails") as? MovieDetailsController else {
+                                                            return
         }
-        return cell
+        self.navigationController?.pushViewController(movieDetailsController, animated: true)
     }
 }
+
 
 extension HomeViewController: UICollectionViewDelegate {
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        //        performSegue(withIdentifier: "detail", sender: self)
-    }
-    
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         
         let countOfMoviesInRow = 2
         let countOfMoviesPerPage = 20
+        let movies =  self.moviesViewModel.movies.value
         
         if indexPath.row == movies.count - countOfMoviesInRow
         {
             let pageNo = (movies.count / countOfMoviesPerPage) + 1
             moviesViewModel.getMoviesInNext(page: pageNo)
         }
-        
     }
 }
 
@@ -163,14 +145,7 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        CGSize(width: collectionView.bounds.size.width/2, height: CGFloat(collectionView.bounds.size.height/2))
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
+        CGSize(width:  collectionView.bounds.size.width/2,
+               height: collectionView.bounds.size.height/2)
     }
 }

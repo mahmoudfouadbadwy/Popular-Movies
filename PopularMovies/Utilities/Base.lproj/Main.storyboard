@@ -90,7 +90,7 @@
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="D69-E8-6i1">
                                 <rect key="frame" x="0.0" y="88" width="414" height="725"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="WaC-JZ-5DE">
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="WaC-JZ-5DE">
                                     <size key="itemSize" width="342" height="218"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
@@ -137,7 +137,6 @@
                     <navigationItem key="navigationItem" title="Home" id="dOj-eA-0YB"/>
                     <connections>
                         <outlet property="collection" destination="D69-E8-6i1" id="zW2-Y7-MDX"/>
-                        <segue destination="aen-Ml-dQ1" kind="show" identifier="detail" id="NRo-vO-2ze"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CXG-yV-7dT" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -147,7 +146,7 @@
         <!--Movie Details Controller-->
         <scene sceneID="fOS-6h-x8m">
             <objects>
-                <viewController id="aen-Ml-dQ1" customClass="MovieDetailsController" customModule="PopularMovies" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MovieDetails" id="aen-Ml-dQ1" customClass="MovieDetailsController" customModule="PopularMovies" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="t8A-j3-EqT">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -441,9 +440,6 @@
             <point key="canvasLocation" x="547.82608695652175" y="-108.48214285714285"/>
         </scene>
     </scenes>
-    <inferredMetricsTieBreakers>
-        <segue reference="fQI-8Z-91P"/>
-    </inferredMetricsTieBreakers>
     <resources>
         <image name="heart" width="512" height="512"/>
         <image name="left-arrow" width="24" height="24"/>

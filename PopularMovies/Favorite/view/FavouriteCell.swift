@@ -3,7 +3,7 @@
 //  PopularMovies
 //
 //  Created by Mahmoud Fouad on 1/6/20.
-//  Copyright © 2020 Mahmoud fouad. All rights reserved.
+//  Copyright © 2020 Mahmoud Fouad. All rights reserved.
 //
 
 import UIKit

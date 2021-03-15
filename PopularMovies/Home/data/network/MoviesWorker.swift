@@ -3,7 +3,7 @@
 //  PopularMovies
 //
 //  Created by Mahmoud Fouad on 3/11/21.
-//  Copyright © 2021 Mahmoud fouad. All rights reserved.
+//  Copyright © 2021 Mahmoud Fouad. All rights reserved.
 //
 
 import Foundation
