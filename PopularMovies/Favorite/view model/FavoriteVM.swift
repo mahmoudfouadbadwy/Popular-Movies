@@ -10,7 +10,7 @@ import Foundation
 
 class FavoriteVM{
     var coreData:LocalStorage!
-    var movie:Movie!
+    var movie: MoviesData.Movie!
     init(coreDate:LocalStorage!) {
         self.coreData = coreDate
     }
@@ -32,7 +32,7 @@ struct Favorite{
     var overview: String!
     var voteAverage: Double!
     var releaseDate: String!
-    init(movie:Movie) {
+    init(movie: MoviesData.Movie) {
         self.moviePoster = movie.posterPath
         self.id = movie.id
         self.originalTitle = movie.originalTitle

@@ -32,6 +32,6 @@ class FavoriteViewController: UIViewController{
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let detail:MovieDetailsController = segue.destination as! MovieDetailsController
-         detail.filmId = movies[index].id
+         detail.movieID = movies[index].id
     }
 }

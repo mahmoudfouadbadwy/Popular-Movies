@@ -3,13 +3,13 @@
 //  PopularMovies
 //
 //  Created by Mahmoud Fouad on 6/19/20.
-//  Copyright © 2020 Mahmoud fouad. All rights reserved.
+//  Copyright © 2020 Mahmoud Fouad. All rights reserved.
 //
 
 import AFNetworking
 class MovieDetailsData{
-    var movie:Movie!
-    func getMovieDetailsData(url:String,completion:@escaping(Movie)-> Void)
+    var movie:MoviesData.Movie!
+    func getMovieDetailsData(url:String,completion:@escaping(MoviesData.Movie)-> Void)
     {
         let manager = AFHTTPSessionManager()
         manager.get(

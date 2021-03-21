@@ -37,6 +37,7 @@ class HomeViewController: UIViewController {
         setupMoviesCollection()
         setupIndicator()
         setupSortingButton()
+        self.navigationItem.title = "Popular Movies"
     }
     
     private func setupIndicator() {
@@ -63,6 +64,7 @@ class HomeViewController: UIViewController {
     @objc private func refreshMovies() {
         moviesViewModel.isPopularMovies = true
         moviesViewModel.getPopularMovies()
+        self.navigationItem.title = "Popular Movies"
     }
     
     @objc private func showSortingMenu() {
@@ -72,12 +74,14 @@ class HomeViewController: UIViewController {
         let highestButton = UIAlertAction(title: topTitle, style: .default) {[weak self] _ in
             self?.moviesViewModel.isPopularMovies = false
             self?.moviesViewModel.getTopRatedMovies()
+            self?.navigationItem.title = "Top Rated Movies"
         }
         menu.addAction(highestButton)
         
         let popularButton = UIAlertAction(title: popTitle, style: .default) {[weak self] _ in
             self?.moviesViewModel.isPopularMovies = true
             self?.moviesViewModel.getPopularMovies()
+            self?.navigationItem.title = "Popular Movies"
         }
         menu.addAction(popularButton)
         
@@ -107,7 +111,7 @@ class HomeViewController: UIViewController {
     private func moviesAction() {
         collection
             .rx
-            .modelSelected(MovieViewModel.self)
+            .modelSelected(MoviesData.ViewModel.self)
             .subscribe(onNext: { [weak self] movie in
                 self?.routeToMovieDetails(with: movie)
             })
@@ -115,7 +119,7 @@ class HomeViewController: UIViewController {
     }
     
     //MARK:- Routing
-    private func routeToMovieDetails(with movie: MovieViewModel) {
+    private func routeToMovieDetails(with movie: MoviesData.ViewModel) {
         guard let movieDetailsController = UIStoryboard(name: "Main",
                                                         bundle: nil).instantiateViewController(withIdentifier: "MovieDetails") as? MovieDetailsController else {
                                                             return

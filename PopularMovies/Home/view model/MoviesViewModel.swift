@@ -12,27 +12,27 @@ import RxCocoa
 
 
 protocol MoviesBusiness {
-    var movies: BehaviorRelay<[MovieViewModel]> {get}
+    var movies: BehaviorRelay<[MoviesData.ViewModel]> {get}
     var isPopularMovies: Bool {get set}
     func getPopularMovies()
     func getTopRatedMovies()
     func getMoviesInNext(page: Int)
-    func saveMovieInStorage(movie: MovieViewModel)
+    func saveMovieInStorage(movie: MoviesData.ViewModel)
 }
 
 class MoviesViewModel: MoviesBusiness {
     
     var isPopularMovies = true
-    var movies: BehaviorRelay<[MovieViewModel]> = BehaviorRelay(value: [])
+    var movies: BehaviorRelay<[MoviesData.ViewModel]> = BehaviorRelay(value: [])
     private let bag = DisposeBag()
     private let storage = LocalStorage.shared
     
     private func getMoviesIn(page: Int) {
         MoviesWorker
             .getMovies(page: page)
-            .subscribe(onNext: {[weak self] movies in
-                let moviesViewModel = movies.map { movie in
-                    MovieViewModel(moviePoster: movie.posterPath,
+            .subscribe(onNext: {[weak self] data in
+                let moviesViewModel = data.movies.map { movie in
+                    MoviesData.ViewModel(moviePoster: movie.posterPath,
                                    id: movie.id, originalTitle: movie.originalTitle,
                                    overview: movie.overview, voteAverage: movie.voteAverage,
                                    releaseDate: movie.releaseDate)
@@ -69,9 +69,9 @@ class MoviesViewModel: MoviesBusiness {
     private func getTopRatedMoviesIn(page: Int) {
         MoviesWorker
             .getTopMovies(page: page)
-            .subscribe(onNext: {[weak self] movies in
-                let moviesViewModel = movies.map { movie in
-                    MovieViewModel(moviePoster: movie.posterPath,
+            .subscribe(onNext: {[weak self] data in
+                let moviesViewModel = data.movies.map { movie in
+                    MoviesData.ViewModel(moviePoster: movie.posterPath,
                                    id: movie.id, originalTitle: movie.originalTitle,
                                    overview: movie.overview, voteAverage: movie.voteAverage,
                                    releaseDate: movie.releaseDate)
@@ -92,16 +92,16 @@ class MoviesViewModel: MoviesBusiness {
         }
     }
     
-    func saveMovieInStorage(movie: MovieViewModel) {
+    func saveMovieInStorage(movie: MoviesData.ViewModel) {
         if Networking.isNetworkEnabled && storage.moviesCount <= 60 {
             storage.add(movie: movie)
         }
     }
     
-    private func getOfflineMovies() -> [MovieViewModel] {
+    private func getOfflineMovies() -> [MoviesData.ViewModel] {
         let offlineMovies = storage.getMovies()
             .map { (movie)  in
-                MovieViewModel(moviePoster: movie.value(forKey: "poster") as! String,
+                MoviesData.ViewModel(moviePoster: movie.value(forKey: "poster") as! String,
                                id: movie.value(forKey: "id") as! Int,
                                originalTitle: movie.value(forKey: "name") as! String,
                                overview: movie.value(forKey: "overview") as! String,

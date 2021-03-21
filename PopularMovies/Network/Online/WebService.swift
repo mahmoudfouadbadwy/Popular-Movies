@@ -11,11 +11,11 @@ import ReachabilitySwift
 import RxSwift
 
 
-class MoviesService {
+class WebService {
     
-    static func loadData(requestUrl: String) -> Observable<[Movie]> {
+    static func loadData<T: Codable>(requestUrl: String) -> Observable<T> {
         
-        return  Observable<[Movie]>.create { observer in
+        return  Observable<T>.create { observer in
             
             let url = URL(string: requestUrl)!
             let request = URLRequest(url: url)
@@ -24,19 +24,19 @@ class MoviesService {
                 
                 if let data = data {
                     do {
-                        let result = try JSONDecoder().decode(MoviesData.self, from: data)
+                        let result = try JSONDecoder().decode(T.self, from: data)
                         print("🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯")
                         print(result)
-                        observer.onNext(result.movies)
+                        observer.onNext(result)
                         observer.onCompleted()
                     } catch let error {
                         print("🧨🧨🧨🧨🧨🧨🧨🧨🧨🧨🧨")
                         print(error)
-                        observer.onError(MoviesException.server)
+                        observer.onError(Exception.server)
                     }
                 } else {
                     print("💊💊💊💊💊💊💊💊💊💊💊💊")
-                    observer.onError(MoviesException.network)
+                    observer.onError(Exception.network)
                 }
             }
             
@@ -47,7 +47,7 @@ class MoviesService {
     }
 }
 
-enum MoviesException: Error {
+enum Exception: Error {
     case network
     case server
 }

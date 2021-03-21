@@ -25,7 +25,7 @@ class LocalStorage {
         fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Movies")
     }
     
-    func add(movie value: MovieViewModel, isFavorite: Bool = false)  {
+    func add(movie value: MoviesData.ViewModel, isFavorite: Bool = false)  {
         fetchRequest.predicate = NSPredicate.init(format:"id == \(value.id)")
         if let result = try? managedContext.fetch(fetchRequest) {
             if result.count == 0 {
@@ -72,7 +72,7 @@ class LocalStorage {
     }
     
     
-    func addToFavourite(movie: Movie)
+    func addToFavourite(movie: MoviesData.Movie)
     {
         fetchRequest.predicate =  NSPredicate.init(format:"id == \(movie.id)")
         if let result = try? managedContext.fetch(fetchRequest){

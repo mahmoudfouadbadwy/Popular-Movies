@@ -37,7 +37,7 @@ class MovieDetailsVM{
 
 class MovieCoreVM{
     var coreData:LocalStorage!
-    var movie:Movie!
+    var movie:MoviesData.Movie!
     init(movieCoreData:LocalStorage) {
         self.coreData = movieCoreData
     }
@@ -60,7 +60,7 @@ struct MovieDetails{
     var rate:Double
     var overview:String
     var release:String
-    init(movie:Movie)
+    init(movie:MoviesData.Movie)
     {
         self.title = movie.title
         self.poster = movie.posterPath

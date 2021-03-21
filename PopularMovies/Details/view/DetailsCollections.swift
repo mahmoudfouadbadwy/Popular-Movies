@@ -6,14 +6,7 @@
 //  Copyright © 2020 Mahmoud fouad. All rights reserved.
 //
 import UIKit
-extension MovieDetailsController {
-    func setupCollections(){
-        youtubeCollection.delegate = self
-        youtubeCollection.dataSource = self
-        reviewsCollection.delegate = self
-        reviewsCollection.dataSource = self
-    }
-}
+
 extension MovieDetailsController:UICollectionViewDataSource{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if Networking.isNetworkEnabled

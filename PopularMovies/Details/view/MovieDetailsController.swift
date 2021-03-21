@@ -3,78 +3,104 @@
 //  PopularMovies
 //
 //  Created by Mahmoud Fouad on 1/3/20.
-//  Copyright © 2020 Mahmoud fouad. All rights reserved.
+//  Copyright © 2020 Mahmoud Fouad. All rights reserved.
 //
 
 import UIKit
 import SDWebImage
 import Cosmos
+
+
 class MovieDetailsController: UIViewController {
-    @IBOutlet weak var youtubeCollection: UICollectionView!
-    @IBOutlet weak var reviewsCollection: UICollectionView!
-    @IBOutlet weak var cosmosview: CosmosView!
-    @IBOutlet weak var movieOverview: UITextView!
-    @IBOutlet weak var movieName: UILabel!
-    @IBOutlet weak var movieImage: UIImageView!
-    @IBOutlet weak var movieDate: UILabel!
-    @IBOutlet weak var favButton: UIButton!
-    var filmId:Int!
-    var movie:MovieDetails!
-    var movieDetailsVM:MovieDetailsVM!
-    var movieData:MovieDetailsData!
-    var movieCore:LocalStorage!
-    var movieCoreVM:MovieCoreVM!
-    var trailers:[Dictionary<String,Any>]!=[] {
+    
+    //MARK:- IBOutlets
+    @IBOutlet weak fileprivate var youtubeCollection: UICollectionView!
+    @IBOutlet weak private var reviewsCollection: UICollectionView!
+    @IBOutlet weak private var cosmosView: CosmosView!
+    @IBOutlet weak private var movieOverview: UITextView!
+    @IBOutlet weak private var movieName: UILabel!
+    @IBOutlet weak private var movieImage: UIImageView!
+    @IBOutlet weak private var movieDate: UILabel!
+    @IBOutlet weak private var favButton: UIButton!
+    
+    //MARK:- Properties
+    var movieID: Int!
+    var movie: MovieDetails!
+    var movieDetailsVM: MovieDetailsVM!
+    var movieData: MovieDetailsData!
+    var movieCore: LocalStorage!
+    var movieCoreVM: MovieCoreVM!
+    var trailers: [Dictionary<String,Any>]!=[] {
         didSet{
             self.youtubeCollection.reloadData()
         }
     }
-    var reviewsArr:[Dictionary<String,Any>]! = []{
+    var reviewsArr: [Dictionary<String,Any>]! = []{
         didSet{
             self.reviewsCollection.reloadData()
         }
     }
+    
+    //MARK:- Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-//        setupCollections()
-//        self.movieData = MovieDetailsData()
-//        self.movieDetailsVM = MovieDetailsVM(movieDetailsAccess: movieData)
-//        self.movieDetailsVM.getMovieDetails(by: filmId) { (result) in
-//            self.movie = result
-//            self.bindDetails()
-//        }
-//        self.movieCore = LocalStorage()
-//        self.movieCoreVM = MovieCoreVM(movieCoreData: movieCore)
+        setupCollections()
+        //        self.movieData = MovieDetailsData()
+        //        self.movieDetailsVM = MovieDetailsVM(movieDetailsAccess: movieData)
+        //        self.movieDetailsVM.getMovieDetails(by: filmId) { (result) in
+        //            self.movie = result
+        //            self.bindDetails()
+        //        }
+        //        self.movieCore = LocalStorage()
+        //        self.movieCoreVM = MovieCoreVM(movieCoreData: movieCore)
     }
     
     override func viewWillAppear(_ animated: Bool) {
-//        if Networking.isNetworkEnabled
-//        {
-//            showReviews()
-//            shwoTrailers()
-//        }
-    }
-    
-    @IBAction func backButton(_ sender: Any) {
-        dismiss(animated: true, completion: nil)
+        //        if Networking.isNetworkEnabled
+        //        {
+        //            showReviews()
+        //            shwoTrailers()
+        //        }
     }
     
     @IBAction func makeFavourite(_ sender: UIButton) {
         if (favButton.tintColor == UIColor.white)
         {
             favButton.tintColor = UIColor.red
-            movieCoreVM.addToFavorite(movieID: filmId, movie: movie)
+            movieCoreVM.addToFavorite(movieID: movieID, movie: movie)
         }
         else
         {
             favButton.tintColor = UIColor.white
-            movieCoreVM.deleteFromFavorite(movieID: filmId)
+            movieCoreVM.deleteFromFavorite(movieID: movieID)
         }
     }
     
+    
+    func setupCollections(){
+        youtubeCollection.delegate = self
+        youtubeCollection.dataSource = self
+        reviewsCollection.delegate = self
+        reviewsCollection.dataSource = self
+    }
+    
+    func bindDetails()
+    {
+        movieName.text = self.movie.title
+        movieImage!.sd_setImage(with:URL(string:Constants.imagePath+self.movie.poster),completed: nil)
+        movieOverview.text = self.movie.overview
+        movieDate.text = self.movie.release
+        cosmosView.settings.fillMode = .precise
+        cosmosView.rating = (self.movie.rate) / 2.0
+        cosmosView.isUserInteractionEnabled = false
+        if self.movieCoreVM.checkIsFavoriteMovie(movieID: movieID) != 0
+        {
+            favButton.tintColor = UIColor.red
+        }
+    }
     func shwoTrailers()
     {
-        movieDetailsVM.getMovieTrailers(url: Constants.movieTrailerPath+String(filmId)+Constants.movieTrailerPath2) { (result) in
+        movieDetailsVM.getMovieTrailers(url: Constants.movieTrailerPath+String(movieID)+Constants.movieTrailerPath2) { (result) in
             self.trailers = result
         }
     }
@@ -93,7 +119,7 @@ class MovieDetailsController: UIViewController {
     func showReviews()
     {
         
-        movieDetailsVM.getMovieReviews(url: Constants.reviewPath+String(filmId)+Constants.reviewPath2) { (result) in
+        movieDetailsVM.getMovieReviews(url: Constants.reviewPath+String(movieID)+Constants.reviewPath2) { (result) in
             self.reviewsArr = result
         }
         
