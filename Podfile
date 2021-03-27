@@ -8,7 +8,6 @@ target 'PopularMovies' do
   # Pods for PopularMovies
 
   pod 'SDWebImage', '~> 5.0'
-  pod 'AFNetworking', '~> 3.0'
   pod 'Cosmos', '~> 17.0'
   pod 'ReachabilitySwift' , '~> 3.0'
   pod 'RxSwift', '~>4.5'

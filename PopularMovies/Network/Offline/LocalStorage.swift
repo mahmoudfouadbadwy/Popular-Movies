@@ -10,42 +10,59 @@ import CoreData
 
 class LocalStorage {
     
+    //MARK:- Properties
     private var movies: [NSManagedObject] = []
     private var appDelegate: AppDelegate
     private var managedContext: NSManagedObjectContext
     private var fetchRequest: NSFetchRequest<NSManagedObject>
+    private var entity: NSEntityDescription?
     static let shared = LocalStorage()
     var moviesCount: Int {
         getMovies().count
     }
     
+    //MARK:- Initializer
     private init() {
         appDelegate = UIApplication.shared.delegate as! AppDelegate
         managedContext = appDelegate.persistentContainer.viewContext
         fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Movies")
+        entity = NSEntityDescription.entity(forEntityName: "Movies", in: managedContext)
     }
     
-    func add(movie value: MoviesData.ViewModel, isFavorite: Bool = false)  {
+    //MARK:- Intents
+    func add(movie value: MoviesData.ViewModel)  {
         fetchRequest.predicate = NSPredicate.init(format:"id == \(value.id)")
         if let result = try? managedContext.fetch(fetchRequest) {
-            if result.count == 0 {
-                let entity = NSEntityDescription.entity(forEntityName: "Movies", in: managedContext)
-                let movie = NSManagedObject(entity: entity!, insertInto: managedContext)
-                movie.setValue(value.id, forKey: "id")
-                movie.setValue(value.originalTitle, forKey: "name")
-                movie.setValue(value.moviePoster, forKey: "poster")
-                movie.setValue(value.voteAverage, forKey: "rate")
-                movie.setValue(value.releaseDate, forKey: "mRelease")
-                movie.setValue(value.overview, forKey: "overview")
-                movie.setValue(isFavorite, forKey: "isFavorite")
-                do{
-                     try managedContext.save()
-                    print("Movie saved successfully")
-                }
-                catch let error as NSError{
-                    print("error saving in core data : \(error)")
-                }
+            if  result.count == 0 {
+                insertMovie(id: value.id,
+                            name: value.originalTitle,
+                            poster: value.moviePoster,
+                            rate: value.voteAverage,
+                            release: value.releaseDate,
+                            overview: value.overview,
+                            isFavorite: false)
             }
+        }
+    }
+    
+    private func insertMovie(id: Int, name: String, poster: String, rate: Double, release: String, overview: String, isFavorite: Bool) {
+        guard let entity = entity else {
+            return
+        }
+        let movie = NSManagedObject(entity: entity, insertInto: managedContext)
+        movie.setValue(id, forKey: "id")
+        movie.setValue(name, forKey: "name")
+        movie.setValue(poster, forKey: "poster")
+        movie.setValue(rate, forKey: "rate")
+        movie.setValue(release, forKey: "mRelease")
+        movie.setValue(overview, forKey: "overview")
+        movie.setValue(isFavorite, forKey: "isFavorite")
+        do {
+            try managedContext.save()
+            print("Movie saved successfully")
+        }
+        catch let error as NSError{
+            print("error saving in core data : \(error)")
         }
     }
     
@@ -59,9 +76,8 @@ class LocalStorage {
         return movies
     }
     
-    func getFavouriteMovies()-> [NSManagedObject]
-    {
-        fetchRequest.predicate =  NSPredicate.init(format: "flag == \(1)")
+    func getFavouriteMovies()-> [NSManagedObject]  {
+        fetchRequest.predicate =  NSPredicate.init(format: "isFavorite == \(true)")
         do{
             movies =  try managedContext.fetch(fetchRequest)
         }
@@ -72,17 +88,21 @@ class LocalStorage {
     }
     
     
-    func addToFavourite(movie: MoviesData.Movie)
-    {
-        fetchRequest.predicate =  NSPredicate.init(format:"id == \(movie.id)")
-        if let result = try? managedContext.fetch(fetchRequest){
+    func addToFavourite(movie value: MovieDetailsData.Response) {
+        fetchRequest.predicate =  NSPredicate.init(format:"id == \(value.id)")
+        if let result = try? managedContext.fetch(fetchRequest) {
             if result.count == 0
             {
-               // add(mov: movie, isFavorite: true)
+                insertMovie(id: value.id,
+                            name: value.originalTitle,
+                            poster: value.posterPath,
+                            rate: value.voteAverage,
+                            release: value.releaseDate,
+                            overview: value.overview,
+                            isFavorite: true)
             }
-            else
-            {
-                result[0].setValue(1, forKey: "flag")
+            else {
+                result[0].setValue(true, forKey: "isFavorite")
                 do{
                     try managedContext.save()
                 }
@@ -97,28 +117,28 @@ class LocalStorage {
     {
         fetchRequest.predicate =  NSPredicate.init(format:"id == \(id)")
         if let result = try? managedContext.fetch(fetchRequest){
-            result[0].setValue(0, forKey: "flag")
+            result[0].setValue(false, forKey: "isFavorite")
         }
         do{
             try managedContext.save()
         }
         catch let error as NSError{
-            print("error saving in core data : \(error)")
+            print("error deleting from core data : \(error)")
         }
         
     }
     
     
-    func checkIsFavourite(id: Int) -> Int
+    func checkIsFavourite(id: Int) -> Bool
     {
         let idPredicate = NSPredicate.init(format:"id == \(id)")
-        let flagPredicate = NSPredicate.init(format:"flag == \(1)")
-        let andPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [ idPredicate,flagPredicate])
+        let isFavoritePredicate = NSPredicate.init(format:"isFavorite == \(true)")
+        let andPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [ idPredicate,isFavoritePredicate])
         fetchRequest.predicate = andPredicate
-        if let result = try? managedContext.fetch(fetchRequest){
-            return result.count
+        if let result = try? managedContext.fetch(fetchRequest) {
+            return result.count != 0
         }
-        return 0
+        return false
     }
     
 }

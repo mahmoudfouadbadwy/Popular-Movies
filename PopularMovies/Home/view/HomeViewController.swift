@@ -26,10 +26,10 @@ class HomeViewController: UIViewController {
     //MARK:- Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupUI()
         moviesViewModel.getPopularMovies()
         bindMovies()
         moviesAction()
-        setupUI()
     }
     
     //MARK:- UI
@@ -42,6 +42,7 @@ class HomeViewController: UIViewController {
     
     private func setupIndicator() {
         indicator = UIActivityIndicatorView(style: .whiteLarge)
+        indicator.color = .red
         indicator.center = view.center
         view.addSubview(indicator)
     }
@@ -94,11 +95,12 @@ class HomeViewController: UIViewController {
     
     //MARK:- UILogic
     private func bindMovies() {
+        indicator.startAnimating()
         moviesViewModel
             .movies
-            .bind(to: collection.rx.items(cellIdentifier: collectionCellId, cellType: MovieCell.self)){
-                [weak self](row , item , cell) in
+            .bind(to: collection.rx.items(cellIdentifier: collectionCellId, cellType: MovieCell.self)) { [weak self](row , item , cell) in
                 guard let self = self else { return }
+                self.indicator.stopAnimating()
                 self.refreshControl.endRefreshing()
                 cell.configCell(imagePath: item.moviePoster)
                 if self.moviesViewModel.movies.value.count <= 60 {
@@ -121,15 +123,15 @@ class HomeViewController: UIViewController {
     //MARK:- Routing
     private func routeToMovieDetails(with movie: MoviesData.ViewModel) {
         guard let movieDetailsController = UIStoryboard(name: "Main",
-                                                        bundle: nil).instantiateViewController(withIdentifier: "MovieDetails") as? MovieDetailsController else {
-                                                            return
-        }
+                                                        bundle: nil).instantiateViewController(withIdentifier: "MovieDetails") as? MovieDetailsController else { return }
+        movieDetailsController.movieID = movie.id
         self.navigationController?.pushViewController(movieDetailsController, animated: true)
     }
 }
 
 
 extension HomeViewController: UICollectionViewDelegate {
+    
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         
         let countOfMoviesInRow = 2
@@ -144,8 +146,8 @@ extension HomeViewController: UICollectionViewDelegate {
     }
 }
 
-extension HomeViewController: UICollectionViewDelegateFlowLayout
-{
+extension HomeViewController: UICollectionViewDelegateFlowLayout {
+    
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {

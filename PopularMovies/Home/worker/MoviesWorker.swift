@@ -12,11 +12,11 @@ import RxSwift
 class MoviesWorker {
     
     static func getMovies(page: Int) -> Observable<MoviesData.Response> {
-        return WebService.loadData(requestUrl:  "\(Constants.moviesUrl)&page=\(page)" )
+        return WebService.makeRequest(requestUrl: "\(Constants.moviesUrl)&page=\(page)")
     }
     
     static func getTopMovies(page: Int) -> Observable<MoviesData.Response> {
-        return WebService.loadData(requestUrl: "\(Constants.moviesTopRate)&page=\(page)")
+        return WebService.makeRequest(requestUrl: "\(Constants.moviesTopRate)&page=\(page)")
     }
 
 }

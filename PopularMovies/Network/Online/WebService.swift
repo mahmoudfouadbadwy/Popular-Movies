@@ -13,7 +13,7 @@ import RxSwift
 
 class WebService {
     
-    static func loadData<T: Codable>(requestUrl: String) -> Observable<T> {
+    static func makeRequest<T: Codable>(requestUrl: String) -> Observable<T> {
         
         return  Observable<T>.create { observer in
             
@@ -44,6 +44,8 @@ class WebService {
             
             return Disposables.create()
         }
+        .observeOn(MainScheduler.instance)
+        .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
     }
 }
 
