@@ -7,31 +7,106 @@
 //
 
 import UIKit
-import SDWebImage
+import RxCocoa
+import RxSwift
 
-class FavoriteViewController: UIViewController{
-    @IBOutlet weak var favCollection: UICollectionView!
-    var coreData:LocalStorage!
-    var favVM:FavoriteVM!
-    var index:Int = -1
-    var movies:[Favorite]=[]{
-        didSet{
-            self.favCollection.reloadData()
-        }
-    }
+class FavoriteViewController: UIViewController {
+    
+    //MARK:- Properties
+    private let viewModel: FavoriteBusiness = FavoriteViewModel()
+    private let cellIdentifier = "favouriteCell"
+    private let bag = DisposeBag()
+    private var indicator: UIActivityIndicatorView!
+    private let refreshControl = UIRefreshControl()
+    
+    //MARK:- IBOutlets
+    @IBOutlet weak private var favCollection: UICollectionView!
+    
+    //MARK:- Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        favCollection.delegate = self
-        favCollection.dataSource = self
-        self.coreData = LocalStorage.shared
-        self.favVM = FavoriteVM(coreDate: coreData)
+        setupUI()
+        viewModel.getFavoriteMovies()
+        bindMovies()
+        moviesAction()
     }
     override func viewWillAppear(_ animated: Bool) {
-     //  movies = favVM.getFavorites()
-     
+        super.viewWillAppear(animated)
+        refreshMovies()
     }
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let detail:MovieDetailsController = segue.destination as! MovieDetailsController
-         detail.movieID = movies[index].id
+    
+    //MARK:- UI
+    private func setupUI() {
+        setupMoviesCollection()
+        setupIndicator()
+        self.navigationItem.title = "Favorite Movies"
+    }
+    private func setupIndicator() {
+        indicator = UIActivityIndicatorView(style: .whiteLarge)
+        indicator.color = .red
+        indicator.center = view.center
+        view.addSubview(indicator)
+    }
+    private func setupMoviesCollection() {
+        favCollection
+            .rx
+            .setDelegate(self)
+            .disposed(by: bag)
+        refreshControl.addTarget(self, action: #selector(refreshMovies), for: .valueChanged)
+        refreshControl.attributedTitle = NSAttributedString(string: "pull to refresh")
+        refreshControl.tintColor = .red
+        favCollection.addSubview(refreshControl)
+    }
+    @objc private func refreshMovies() {
+        viewModel.getFavoriteMovies()
+    }
+    
+    //MARK:- UILogic
+    private func bindMovies() {
+        self.indicator.startAnimating()
+        viewModel
+            .movies
+            .bind(to: favCollection.rx.items(cellIdentifier: cellIdentifier, cellType: FavouriteCell.self)) {  (row , item , cell) in
+                cell.configer(poster: item.moviePoster)
+        }
+        .disposed(by: bag)
+        
+        viewModel
+            .movies
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.indicator.stopAnimating()
+                self.refreshControl.endRefreshing()
+            })
+            .disposed(by: bag)
+    }
+    
+    //MARK:- Intent
+    private func moviesAction() {
+        favCollection
+            .rx
+            .modelSelected(MoviesData.ViewModel.self)
+            .subscribe(onNext: { [weak self] movie in
+                self?.routeToMovieDetails(with: movie)
+            })
+            .disposed(by: bag)
+    }
+    
+    //MARK:- Routing
+    private func routeToMovieDetails(with movie: MoviesData.ViewModel) {
+        guard let movieDetailsController = UIStoryboard(name: "Main",
+                                                        bundle: nil).instantiateViewController(withIdentifier: "MovieDetails") as? MovieDetailsController else { return }
+        movieDetailsController.movieID = movie.id
+        self.navigationController?.pushViewController(movieDetailsController, animated: true)
+    }
+}
+
+extension FavoriteViewController: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        CGSize(width:  collectionView.bounds.size.width/2,
+               height: collectionView.bounds.size.height/2)
     }
 }

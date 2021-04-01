@@ -14,6 +14,6 @@ class MovieCell: UICollectionViewCell {
     @IBOutlet private weak var poster: UIImageView!
     
     func configCell(imagePath: String) {
-        poster.sd_setImage(with: URL(string: Constants.imagePath + imagePath),placeholderImage:UIImage.init(named: "loading.png"))
+        poster.sd_setImage(with: URL(string: Constants.imagePath + imagePath), placeholderImage: UIImage.init(named: "loading.png"))
     }
 }

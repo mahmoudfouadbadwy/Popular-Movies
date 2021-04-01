@@ -27,8 +27,7 @@
 		BF777E7E23BF8FB10035E125 /* Splash.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF777E7D23BF8FB10035E125 /* Splash.swift */; };
 		BF79535423C35C22000CEEDB /* FavouriteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF79535323C35C22000CEEDB /* FavouriteCell.swift */; };
 		BF88422F249CC77B00ADDF39 /* MovieDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF88422E249CC77B00ADDF39 /* MovieDetailsViewModel.swift */; };
-		BF8F575924A266D9001BF06B /* FavoriteCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8F575824A266D9001BF06B /* FavoriteCollection.swift */; };
-		BF8F575B24A268E6001BF06B /* FavoriteVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8F575A24A268E6001BF06B /* FavoriteVM.swift */; };
+		BF8F575B24A268E6001BF06B /* FavoriteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8F575A24A268E6001BF06B /* FavoriteViewModel.swift */; };
 		BF8F575D24A27204001BF06B /* FavoriteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8F575C24A27204001BF06B /* FavoriteViewController.swift */; };
 		BF90B5C623C1406800FA2DF4 /* TrailerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF90B5C523C1406800FA2DF4 /* TrailerCell.swift */; };
 		BF9C0F0723C289CC0021203D /* LocalStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9C0F0623C289CC0021203D /* LocalStorage.swift */; };
@@ -60,8 +59,7 @@
 		BF777E7D23BF8FB10035E125 /* Splash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Splash.swift; sourceTree = "<group>"; };
 		BF79535323C35C22000CEEDB /* FavouriteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteCell.swift; sourceTree = "<group>"; };
 		BF88422E249CC77B00ADDF39 /* MovieDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailsViewModel.swift; sourceTree = "<group>"; };
-		BF8F575824A266D9001BF06B /* FavoriteCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCollection.swift; sourceTree = "<group>"; };
-		BF8F575A24A268E6001BF06B /* FavoriteVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteVM.swift; sourceTree = "<group>"; };
+		BF8F575A24A268E6001BF06B /* FavoriteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteViewModel.swift; sourceTree = "<group>"; };
 		BF8F575C24A27204001BF06B /* FavoriteViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoriteViewController.swift; sourceTree = "<group>"; };
 		BF90B5C523C1406800FA2DF4 /* TrailerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrailerCell.swift; sourceTree = "<group>"; };
 		BF9C0F0623C289CC0021203D /* LocalStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalStorage.swift; sourceTree = "<group>"; };
@@ -240,7 +238,6 @@
 			children = (
 				BF8F575C24A27204001BF06B /* FavoriteViewController.swift */,
 				BF79535323C35C22000CEEDB /* FavouriteCell.swift */,
-				BF8F575824A266D9001BF06B /* FavoriteCollection.swift */,
 			);
 			path = view;
 			sourceTree = "<group>";
@@ -248,7 +245,7 @@
 		BF884228249CB47B00ADDF39 /* view model */ = {
 			isa = PBXGroup;
 			children = (
-				BF8F575A24A268E6001BF06B /* FavoriteVM.swift */,
+				BF8F575A24A268E6001BF06B /* FavoriteViewModel.swift */,
 			);
 			path = "view model";
 			sourceTree = "<group>";
@@ -442,7 +439,7 @@
 			files = (
 				BF8F575D24A27204001BF06B /* FavoriteViewController.swift in Sources */,
 				BF777E6223BF6F1D0035E125 /* PopularMovies.xcdatamodeld in Sources */,
-				BF8F575B24A268E6001BF06B /* FavoriteVM.swift in Sources */,
+				BF8F575B24A268E6001BF06B /* FavoriteViewModel.swift in Sources */,
 				BFB93C6F2491BCB0000EB13E /* Constants.swift in Sources */,
 				BFB93C6B24917070000EB13E /* Movie.swift in Sources */,
 				3B0003C825F920AD00FB480E /* WebService.swift in Sources */,
@@ -464,7 +461,6 @@
 				BF777E5A23BF6F1C0035E125 /* AppDelegate.swift in Sources */,
 				3B1B5011260E84C6000E8EF6 /* Review.swift in Sources */,
 				BF777E7E23BF8FB10035E125 /* Splash.swift in Sources */,
-				BF8F575924A266D9001BF06B /* FavoriteCollection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

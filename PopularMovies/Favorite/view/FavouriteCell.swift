@@ -7,8 +7,13 @@
 //
 
 import UIKit
+import SDWebImage
 
 class FavouriteCell: UICollectionViewCell {
     
-    @IBOutlet weak var favouriteImage: UIImageView!
+    @IBOutlet weak private var favouriteImage: UIImageView!
+    
+    func configer(poster: String) {
+        favouriteImage.sd_setImage(with: URL(string: Constants.imagePath + poster), placeholderImage: UIImage.init(named: "loading.png"))
+    }
 }
