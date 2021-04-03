@@ -122,16 +122,14 @@ class MovieDetailsController: UIViewController {
     }
     
     private func routeToReviews() {
-        guard let reviewsController = UIStoryboard(name: "Main",
-                                                   bundle: nil).instantiateViewController(withIdentifier: "ReviewsViewController") as? ReviewsViewController else { return }
+        guard let reviewsController = getController(ReviewsViewController.self, fromBoard: "Main") else { return }
         reviewsController.movieID = movieID
-        self.navigationController?.pushViewController(reviewsController, animated: true)
+        self.navigate(to: reviewsController)
     }
     
     private func routeToTrailers() {
-        guard let trailerController =  UIStoryboard(name: "Main",
-                                                    bundle: nil).instantiateViewController(withIdentifier: "TrailersViewController") as? TrailersViewController else { return }
+        guard let trailerController =  getController(TrailersViewController.self, fromBoard: "Main") else { return }
         trailerController.movieId = movieID
-        self.navigationController?.pushViewController(trailerController, animated: true)
+        self.navigate(to: trailerController)
     }
 }

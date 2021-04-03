@@ -18,7 +18,6 @@ class HomeViewController: UIViewController {
     //MARK:- Properties
     private var moviesViewModel: MoviesBusiness = MoviesViewModel()
     private var indicator: UIActivityIndicatorView!
-    private(set) var menuCellId = "cell"
     private let collectionCellId = "MovieCell"
     private let bag = DisposeBag()
     private let refreshControl = UIRefreshControl()
@@ -122,10 +121,11 @@ class HomeViewController: UIViewController {
     
     //MARK:- Routing
     private func routeToMovieDetails(with movie: MoviesData.ViewModel) {
-        guard let movieDetailsController = UIStoryboard(name: "Main",
-                                                        bundle: nil).instantiateViewController(withIdentifier: "MovieDetails") as? MovieDetailsController else { return }
-        movieDetailsController.movieID = movie.id
-        self.navigationController?.pushViewController(movieDetailsController, animated: true)
+        guard let details = self.getController(MovieDetailsController.self, fromBoard: "Main") else {
+            return
+        }
+        details.movieID = movie.id
+        self.navigate(to: details)
     }
 }
 

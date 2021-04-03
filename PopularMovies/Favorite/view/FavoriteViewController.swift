@@ -94,10 +94,9 @@ class FavoriteViewController: UIViewController {
     
     //MARK:- Routing
     private func routeToMovieDetails(with movie: MoviesData.ViewModel) {
-        guard let movieDetailsController = UIStoryboard(name: "Main",
-                                                        bundle: nil).instantiateViewController(withIdentifier: "MovieDetails") as? MovieDetailsController else { return }
+        guard let movieDetailsController = getController(MovieDetailsController.self, fromBoard: "Main") else { return }
         movieDetailsController.movieID = movie.id
-        self.navigationController?.pushViewController(movieDetailsController, animated: true)
+        self.navigate(to: movieDetailsController)
     }
 }
 
