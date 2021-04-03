@@ -18,7 +18,7 @@ class TrailersViewController: UIViewController {
     //MARK:- Properties
     var movieId: Int!
     private let viewModel: MoviewTrailersBusiness = MovieDetailsViewModel()
-    private let trailerCellIdentifier = "trailerCell" 
+    private let trailerCellIdentifier = Strings.Cell.trailer
     private let bag = DisposeBag()
     
     //MARK:- Lifecycle
@@ -32,7 +32,7 @@ class TrailersViewController: UIViewController {
     
     //MARK:- UI
     private func setupUI() {
-        navigationItem.title = "Trailers"
+        navigationItem.title = Strings.Title.trailer
         trailersCollection
             .rx
             .setDelegate(self)

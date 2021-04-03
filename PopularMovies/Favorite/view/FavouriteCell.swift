@@ -14,6 +14,6 @@ class FavouriteCell: UICollectionViewCell {
     @IBOutlet weak private var favouriteImage: UIImageView!
     
     func configer(poster: String) {
-        favouriteImage.sd_setImage(with: URL(string: Constants.imagePath + poster), placeholderImage: UIImage.init(named: "loading.png"))
+        favouriteImage.sd_setImage(with: URL(string: Strings.URL.imagePath + poster), placeholderImage: UIImage.init(named: Strings.Image.loading))
     }
 }

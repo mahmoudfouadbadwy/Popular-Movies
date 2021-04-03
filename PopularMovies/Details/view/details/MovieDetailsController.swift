@@ -69,7 +69,7 @@ class MovieDetailsController: UIViewController {
     
     //MARK:- UI
     private func setupUI() {
-        self.navigationItem.title = "Details"
+        self.navigationItem.title = Strings.Title.details
         self.cosmosView.settings.fillMode = .precise
         self.cosmosView.isUserInteractionEnabled = false
         indicator.center = view.center
@@ -88,7 +88,7 @@ class MovieDetailsController: UIViewController {
               //  self?.moreStack.isHidden = false
                 self?.movie = movie
                 self?.movieName.text = movie.originalTitle
-                self?.movieImage.sd_setImage(with: URL(string: Constants.imagePath + movie.posterPath), placeholderImage: UIImage(named: "loading"))
+                self?.movieImage.sd_setImage(with: URL(string: Strings.URL.imagePath + movie.posterPath), placeholderImage: UIImage(named: Strings.Image.loading))
                 self?.movieOverview.text = movie.overview
                 self?.movieDate.text = movie.releaseDate
                 self?.cosmosView.rating = (movie.voteAverage) / 2.0

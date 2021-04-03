@@ -19,7 +19,7 @@ class ReviewsViewController: UIViewController {
     var movieID: Int!
     private let viewModel: MovieReviewsBusiness =  MovieDetailsViewModel()
     private let bag = DisposeBag()
-    private let reviewCellIdentifier = "reviewCell"
+    private let reviewCellIdentifier = Strings.Cell.review
     
     //MARK:- Lifecycle
     override func viewDidLoad() {
@@ -32,7 +32,7 @@ class ReviewsViewController: UIViewController {
     
     //MARK:- UI
     private func setupUI() {
-        navigationItem.title = "Reviews"
+        navigationItem.title = Strings.Title.reviews
         reviewsCollection
             .rx
             .setDelegate(self)

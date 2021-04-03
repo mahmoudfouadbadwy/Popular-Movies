@@ -18,7 +18,6 @@ class HomeViewController: UIViewController {
     //MARK:- Properties
     private var moviesViewModel: MoviesBusiness = MoviesViewModel()
     private var indicator: UIActivityIndicatorView!
-    private let collectionCellId = "MovieCell"
     private let bag = DisposeBag()
     private let refreshControl = UIRefreshControl()
     
@@ -36,7 +35,7 @@ class HomeViewController: UIViewController {
         setupMoviesCollection()
         setupIndicator()
         setupSortingButton()
-        self.navigationItem.title = "Popular Movies"
+        self.navigationItem.title = Strings.Title.popular
     }
     
     private func setupIndicator() {
@@ -51,7 +50,7 @@ class HomeViewController: UIViewController {
             .setDelegate(self)
             .disposed(by: bag)
         refreshControl.addTarget(self, action: #selector(refreshMovies), for: .valueChanged)
-        refreshControl.attributedTitle = NSAttributedString(string: "pull to refresh")
+        refreshControl.attributedTitle = NSAttributedString(string: Strings.Message.pull)
         refreshControl.tintColor = .red
         collection.addSubview(refreshControl)
     }
@@ -64,28 +63,28 @@ class HomeViewController: UIViewController {
     @objc private func refreshMovies() {
         moviesViewModel.isPopularMovies = true
         moviesViewModel.getPopularMovies()
-        self.navigationItem.title = "Popular Movies"
+        self.navigationItem.title = Strings.Title.popular
     }
     
     @objc private func showSortingMenu() {
-        let menu = UIAlertController(title: "Please select sorting type", message: "Option to select", preferredStyle: .actionSheet)
-        let popTitle = moviesViewModel.isPopularMovies ? "Popular  √" : "Popular"
-        let topTitle = moviesViewModel.isPopularMovies ? "Highest rated" : "Highest rated  √"
+        let menu = UIAlertController(title: Strings.Title.sorting, message: Strings.Message.sort, preferredStyle: .actionSheet)
+        let popTitle = moviesViewModel.isPopularMovies ? Strings.Title.popularSelected : Strings.Title.popularNormal
+        let topTitle = moviesViewModel.isPopularMovies ? Strings.Title.topNormal : Strings.Title.topSelected
         let highestButton = UIAlertAction(title: topTitle, style: .default) {[weak self] _ in
             self?.moviesViewModel.isPopularMovies = false
             self?.moviesViewModel.getTopRatedMovies()
-            self?.navigationItem.title = "Top Rated Movies"
+            self?.navigationItem.title = Strings.Title.topRated
         }
         menu.addAction(highestButton)
         
         let popularButton = UIAlertAction(title: popTitle, style: .default) {[weak self] _ in
             self?.moviesViewModel.isPopularMovies = true
             self?.moviesViewModel.getPopularMovies()
-            self?.navigationItem.title = "Popular Movies"
+            self?.navigationItem.title = Strings.Title.popular
         }
         menu.addAction(popularButton)
         
-        let cancelButton = UIAlertAction(title: "Cancel", style: .cancel) { _ in
+        let cancelButton = UIAlertAction(title: Strings.Title.cancel, style: .cancel) { _ in
             menu.dismiss(animated: true, completion: nil)
         }
         menu.addAction(cancelButton)
@@ -97,7 +96,7 @@ class HomeViewController: UIViewController {
         indicator.startAnimating()
         moviesViewModel
             .movies
-            .bind(to: collection.rx.items(cellIdentifier: collectionCellId, cellType: MovieCell.self)) { [weak self](row , item , cell) in
+            .bind(to: collection.rx.items(cellIdentifier: Strings.Cell.movie, cellType: MovieCell.self)) { [weak self](row , item , cell) in
                 guard let self = self else { return }
                 self.indicator.stopAnimating()
                 self.refreshControl.endRefreshing()

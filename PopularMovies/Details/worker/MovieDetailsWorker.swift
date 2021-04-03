@@ -12,17 +12,17 @@ import RxSwift
 class MovieDetailsWorker {
     
     static func getMovieDetails(by id: Int)-> Observable<MovieDetailsData.Response> {
-        let url = Constants.movieDetailsPath + "\(id)" + Constants.movieDetailsPath2
+        let url = Strings.URL.movieDetailsPath + "\(id)" + Strings.URL.movieDetailsPath2
         return WebService.makeRequest(requestUrl: url)
     }
     
     static func getReviews(by id: Int) -> Observable<Review.Response> {
-        let url = Constants.reviewPath + "\(id)" + Constants.reviewPath2
+        let url = Strings.URL.reviewPath + "\(id)" + Strings.URL.reviewPath2
         return WebService.makeRequest(requestUrl: url)
     }
     
     static func getTrailers(by id: Int) -> Observable<Trailer.Response> {
-        let url = Constants.movieTrailerPath + "\(id)" + Constants.movieTrailerPath2
+        let url = Strings.URL.movieTrailerPath + "\(id)" + Strings.URL.movieTrailerPath2
         return WebService.makeRequest(requestUrl: url)
     }
 }

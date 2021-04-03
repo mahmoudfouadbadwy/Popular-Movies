@@ -39,7 +39,7 @@ class FavoriteViewController: UIViewController {
     private func setupUI() {
         setupMoviesCollection()
         setupIndicator()
-        self.navigationItem.title = "Favorite Movies"
+        self.navigationItem.title = Strings.Title.favorite
     }
     private func setupIndicator() {
         indicator = UIActivityIndicatorView(style: .whiteLarge)
@@ -53,7 +53,7 @@ class FavoriteViewController: UIViewController {
             .setDelegate(self)
             .disposed(by: bag)
         refreshControl.addTarget(self, action: #selector(refreshMovies), for: .valueChanged)
-        refreshControl.attributedTitle = NSAttributedString(string: "pull to refresh")
+        refreshControl.attributedTitle = NSAttributedString(string: Strings.Message.pull)
         refreshControl.tintColor = .red
         favCollection.addSubview(refreshControl)
     }
