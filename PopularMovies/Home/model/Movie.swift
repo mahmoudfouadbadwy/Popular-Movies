@@ -28,7 +28,7 @@ enum MoviesData {
     
     struct Movie: Codable {
         let adult: Bool
-        let backdropPath: String
+        let backdropPath: String?
         let genreIDS: [Int]
         let id: Int
         let originalLanguage, originalTitle, overview: String

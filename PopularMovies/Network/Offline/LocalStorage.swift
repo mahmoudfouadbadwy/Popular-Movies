@@ -11,10 +11,10 @@ import CoreData
 class LocalStorage {
     
     //MARK:- Properties
-    private var movies: [NSManagedObject] = []
+    private var movies: [Movies] = []
     private var appDelegate: AppDelegate
     private var managedContext: NSManagedObjectContext
-    private var fetchRequest: NSFetchRequest<NSManagedObject>
+    private var fetchRequest: NSFetchRequest<Movies>
     private var entity: NSEntityDescription?
     static let shared = LocalStorage()
     var moviesCount: Int {
@@ -25,23 +25,21 @@ class LocalStorage {
     private init() {
         appDelegate = UIApplication.shared.delegate as! AppDelegate
         managedContext = appDelegate.persistentContainer.viewContext
-        fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Movies")
-        entity = NSEntityDescription.entity(forEntityName: "Movies", in: managedContext)
+        fetchRequest = Movies.fetchRequest()
+        entity = Movies.entity()
     }
     
     //MARK:- Intents
     func add(movie value: MoviesData.ViewModel)  {
         fetchRequest.predicate = NSPredicate.init(format:"id == \(value.id)")
-        if let result = try? managedContext.fetch(fetchRequest) {
-            if  result.count == 0 {
-                insertMovie(id: value.id,
-                            name: value.originalTitle,
-                            poster: value.moviePoster,
-                            rate: value.voteAverage,
-                            release: value.releaseDate,
-                            overview: value.overview,
-                            isFavorite: false)
-            }
+        if let result = try? managedContext.fetch(fetchRequest), result.isEmpty {
+            insertMovie(id: value.id,
+                        name: value.originalTitle,
+                        poster: value.moviePoster,
+                        rate: value.voteAverage,
+                        release: value.releaseDate,
+                        overview: value.overview,
+                        isFavorite: false)
         }
     }
     
@@ -49,28 +47,22 @@ class LocalStorage {
         guard let entity = entity else {
             return
         }
-        let movie = NSManagedObject(entity: entity, insertInto: managedContext)
-        movie.setValue(id, forKey: "id")
-        movie.setValue(name, forKey: "name")
-        movie.setValue(poster, forKey: "poster")
-        movie.setValue(rate, forKey: "rate")
-        movie.setValue(release, forKey: "mRelease")
-        movie.setValue(overview, forKey: "overview")
-        movie.setValue(isFavorite, forKey: "isFavorite")
-        do {
-            try managedContext.save()
-            print("Movie saved successfully")
-        }
-        catch let error as NSError{
-            print("error saving in core data : \(error)")
-        }
+        let movie = Movies(entity: entity, insertInto: managedContext)
+        movie.id = Int64(id)
+        movie.name = name
+        movie.poster = poster
+        movie.rate = rate
+        movie.mRelease = release
+        movie.overview = overview
+        movie.isFavorite = isFavorite
+        appDelegate.saveContext()
     }
     
-    func getMovies() -> [NSManagedObject] {
+    func getMovies() -> [Movies] {
         do {
             movies =  try managedContext.fetch(fetchRequest)
         }
-        catch let error as NSError{
+        catch let error as NSError {
             print(error)
         }
         return movies
@@ -91,8 +83,7 @@ class LocalStorage {
     func addToFavourite(movie value: MovieDetailsData.Response) {
         fetchRequest.predicate =  NSPredicate.init(format:"id == \(value.id)")
         if let result = try? managedContext.fetch(fetchRequest) {
-            if result.count == 0
-            {
+            if result.count == 0 {
                 insertMovie(id: value.id,
                             name: value.originalTitle,
                             poster: value.posterPath,
@@ -102,43 +93,30 @@ class LocalStorage {
                             isFavorite: true)
             }
             else {
-                result[0].setValue(true, forKey: "isFavorite")
-                do{
-                    try managedContext.save()
-                }
-                catch let error as NSError{
-                    print("error saving in core data : \(error)")
-                }
+                result[0].isFavorite = true
+                appDelegate.saveContext()
             }
         }
     }
     
-    func deleteFromFavourite(id: Int)
-    {
+    func deleteFromFavourite(id: Int) {
         fetchRequest.predicate =  NSPredicate.init(format:"id == \(id)")
-        if let result = try? managedContext.fetch(fetchRequest){
-            result[0].setValue(false, forKey: "isFavorite")
+        if let result = try? managedContext.fetch(fetchRequest) {
+            result[0].isFavorite = false
+            appDelegate.saveContext()
         }
-        do{
-            try managedContext.save()
-        }
-        catch let error as NSError{
-            print("error deleting from core data : \(error)")
-        }
-        
     }
     
     
-    func checkIsFavourite(id: Int) -> Bool
-    {
-        let idPredicate = NSPredicate.init(format:"id == \(id)")
-        let isFavoritePredicate = NSPredicate.init(format:"isFavorite == \(true)")
+    func checkIsFavourite(id: Int) -> Bool {
+        var isFavorite = false
+        let idPredicate = NSPredicate.init(format: "id == \(id)")
+        let isFavoritePredicate = NSPredicate.init(format: "isFavorite == \(true)")
         let andPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [ idPredicate,isFavoritePredicate])
         fetchRequest.predicate = andPredicate
         if let result = try? managedContext.fetch(fetchRequest) {
-            return result.count != 0
+            isFavorite = !result.isEmpty
         }
-        return false
+        return isFavorite
     }
-    
 }

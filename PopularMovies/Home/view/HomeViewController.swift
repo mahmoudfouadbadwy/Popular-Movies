@@ -137,8 +137,7 @@ extension HomeViewController: UICollectionViewDelegate {
         let countOfMoviesPerPage = 20
         let movies =  self.moviesViewModel.movies.value
         
-        if indexPath.row == movies.count - countOfMoviesInRow
-        {
+        if indexPath.row == movies.count - countOfMoviesInRow {
             let pageNo = (movies.count / countOfMoviesPerPage) + 1
             moviesViewModel.getMoviesInNext(page: pageNo)
         }

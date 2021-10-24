@@ -87,7 +87,7 @@ class MoviesViewModel: MoviesBusiness {
     }
     
     func getMoviesInNext(page: Int) {
-        if Networking.isNetworkEnabled{
+        if Networking.isNetworkEnabled {
             isPopularMovies ? getMoviesIn(page: page) : getTopRatedMoviesIn(page: page)
         }
     }
