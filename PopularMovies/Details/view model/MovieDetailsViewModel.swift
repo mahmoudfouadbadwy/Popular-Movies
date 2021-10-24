@@ -11,12 +11,11 @@ import RxSwift
 import RxCocoa
 
 protocol MoviewDetailsBusiness {
-    var movieDetails: BehaviorRelay<MovieDetailsData.Response> {get}
-    func getMovieDetails(MovieId: Int)
+    var  movieDetails: BehaviorRelay<MovieDetailsData.ViewModel> {get}
+    func getMovieDetails(movieId: Int)
     func checkIsFavorite(movieId: Int)-> Bool
     func unFavorite()
     func makeFavorite()
-    
 }
 
 protocol MovieReviewsBusiness {
@@ -33,35 +32,28 @@ class MovieDetailsViewModel: MoviewDetailsBusiness, MovieReviewsBusiness, Moview
     
     // MARK:- Properties
     private let bag = DisposeBag()
-    var movieDetails: BehaviorRelay<MovieDetailsData.Response> = BehaviorRelay(value: MovieDetailsData.fakeMovie)
+    var movieDetails: BehaviorRelay<MovieDetailsData.ViewModel> = BehaviorRelay(value: MovieDetailsData.fakeMovie)
+    var movieTrailers: BehaviorRelay<[Trailer.viewModel]> =  BehaviorRelay(value: [])
+    var movieReviews: BehaviorRelay<[Review.ViewModel]> = BehaviorRelay(value: [])
     
     //MARK:- Intents
-    func getMovieDetails(MovieId: Int) {
-        MovieDetailsWorker
-            .getMovieDetails(by: MovieId)
-            .subscribe(onNext: { [weak self] movie in
-                self?.movieDetails.accept(movie)
-            })
-            .disposed(by: bag)
+    func getMovieDetails(movieId: Int) {
+        if Networking.isNetworkEnabled {
+            getOnlineDetails(movieId)
+        } else {
+           getOfflineDetails(movieId)
+        }
     }
     
     func checkIsFavorite(movieId: Int)-> Bool {
         LocalStorage.shared.checkIsFavourite(id: movieId)
     }
-    
     func unFavorite() {
         LocalStorage.shared.deleteFromFavourite(id: movieDetails.value.id)
     }
-    
     func makeFavorite() {
         LocalStorage.shared.addToFavourite(movie: movieDetails.value)
     }
-//}
-
-//extension MovieDetailsViewModel: MovieReviewsBusiness {
-    
-    var movieReviews: BehaviorRelay<[Review.ViewModel]> = BehaviorRelay(value: [])
-    //{ BehaviorRelay(value: []) }
     func getReviews(by movieId: Int) {
         MovieDetailsWorker
             .getReviews(by: movieId)
@@ -73,12 +65,6 @@ class MovieDetailsViewModel: MoviewDetailsBusiness, MovieReviewsBusiness, Moview
             })
             .disposed(by: bag)
     }
-//}
-
-//extension MovieDetailsViewModel: MoviewTrailersBusiness {
-    
-    var movieTrailers: BehaviorRelay<[Trailer.viewModel]> =  BehaviorRelay(value: [])
-    //{ BehaviorRelay(value: []) }
     func getTrailers(by movieId: Int) {
         MovieDetailsWorker
             .getTrailers(by: movieId)
@@ -89,5 +75,21 @@ class MovieDetailsViewModel: MoviewDetailsBusiness, MovieReviewsBusiness, Moview
                 self?.movieTrailers.accept(viewModelArr)
             })
             .disposed(by: bag)
+    }
+    
+    private func getOnlineDetails(_ movieID: Int) {
+        MovieDetailsWorker
+            .getMovieDetails(by: movieID)
+            .subscribe(onNext: { [weak self] movie in
+               let vmMovie = MovieDetailsData.ViewModel(moviePoster: movie.posterPath, id: movie.id, originalTitle: movie.originalTitle, overview: movie.overview, voteAverage: movie.voteAverage, releaseDate: movie.releaseDate)
+                self?.movieDetails.accept(vmMovie)
+            })
+            .disposed(by: bag)
+    }
+    
+    private func getOfflineDetails(_ movieID: Int) {
+        guard let movie = LocalStorage.shared.getMovieBy(id: movieID) else { return }
+        let vmMovie = MovieDetailsData.ViewModel(moviePoster: movie.poster ?? "", id: Int(movie.id), originalTitle: movie.name ?? "", overview: movie.overview ?? "", voteAverage: movie.rate , releaseDate: movie.mRelease ?? "")
+        self.movieDetails.accept(vmMovie)
     }
 }

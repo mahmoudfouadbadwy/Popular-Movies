@@ -27,12 +27,21 @@ enum MovieDetailsData {
         }
     }
     
-    static var fakeMovie: Response {
-        Response(id: 1,
-                 originalTitle: "No name available!",
-                 overview: "No overview available",
-                 posterPath: "",
-                 releaseDate: "0000-00-00",
-                 voteAverage: 0.0)
+    static var fakeMovie: ViewModel {
+        ViewModel(moviePoster: "",
+                  id: 1,
+                  originalTitle: "No name available!",
+                  overview: "No overview available",
+                  voteAverage: 0.0,
+                  releaseDate: "0000-00-00")
+    }
+    
+    struct ViewModel {
+        var moviePoster: String
+        var id: Int
+        var originalTitle: String
+        var overview: String
+        var voteAverage: Double
+        var releaseDate: String
     }
 }

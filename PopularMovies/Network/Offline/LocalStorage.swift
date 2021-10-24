@@ -80,13 +80,13 @@ class LocalStorage {
     }
     
     
-    func addToFavourite(movie value: MovieDetailsData.Response) {
+    func addToFavourite(movie value: MovieDetailsData.ViewModel) {
         fetchRequest.predicate =  NSPredicate.init(format:"id == \(value.id)")
         if let result = try? managedContext.fetch(fetchRequest) {
             if result.count == 0 {
                 insertMovie(id: value.id,
                             name: value.originalTitle,
-                            poster: value.posterPath,
+                            poster: value.moviePoster,
                             rate: value.voteAverage,
                             release: value.releaseDate,
                             overview: value.overview,
@@ -118,5 +118,11 @@ class LocalStorage {
             isFavorite = !result.isEmpty
         }
         return isFavorite
+    }
+    
+    func getMovieBy(id: Int) -> Movies? {
+        fetchRequest.predicate = NSPredicate.init(format: "id == \(id)")
+        let result = try? managedContext.fetch(fetchRequest)
+        return result?[0]
     }
 }

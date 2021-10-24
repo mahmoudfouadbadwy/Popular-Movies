@@ -32,14 +32,14 @@ class MovieDetailsController: UIViewController {
     private let bag = DisposeBag()
     private let indicator = UIActivityIndicatorView(style: .whiteLarge)
     private var isFavorite: Bool?
-    private var movie: MovieDetailsData.Response?
+    private var movie: MovieDetailsData.ViewModel?
     
     //MARK:- Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         isFavorite = viewModel.checkIsFavorite(movieId: movieID)
-        viewModel.getMovieDetails(MovieId: movieID)
+        viewModel.getMovieDetails(movieId: movieID)
         bindeMovieDetails()
         favoriteAction()
         showReviews()
@@ -88,7 +88,7 @@ class MovieDetailsController: UIViewController {
               //  self?.moreStack.isHidden = false
                 self?.movie = movie
                 self?.movieName.text = movie.originalTitle
-                self?.movieImage.sd_setImage(with: URL(string: Strings.URL.imagePath + movie.posterPath), placeholderImage: UIImage(named: Strings.Image.loading))
+                self?.movieImage.sd_setImage(with: URL(string: Strings.URL.imagePath + movie.moviePoster), placeholderImage: UIImage(named: Strings.Image.loading))
                 self?.movieOverview.text = movie.overview
                 self?.movieDate.text = movie.releaseDate
                 self?.cosmosView.rating = (movie.voteAverage) / 2.0
