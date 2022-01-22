@@ -7,9 +7,7 @@
 //
 
 import UIKit
-import RxSwift
-import RxCocoa
-
+import Combine
 class HomeViewController: UIViewController {
     
     //MARK: - IBOutlets
@@ -17,9 +15,14 @@ class HomeViewController: UIViewController {
     
     //MARK: - Properties
     private var moviesViewModel: MoviesBusiness = MoviesViewModel()
+    private var movies = [MoviesData.ViewModel]() {
+        didSet {
+            collection.reloadData()
+        }
+    }
     private var indicator: UIActivityIndicatorView!
-    private let bag = DisposeBag()
-    private let refreshControl = UIRefreshControl()
+    private var subscription = Set<AnyCancellable>()
+    private var refreshControl: UIRefreshControl!
     
     //MARK: - Life cycle
     override func viewDidLoad() {
@@ -27,12 +30,11 @@ class HomeViewController: UIViewController {
         setupUI()
         moviesViewModel.getPopularMovies()
         bindMovies()
-        moviesAction()
     }
     
     //MARK: - UI
     private func setupUI() {
-        setupMoviesCollection()
+        setupRefreshControl()
         setupIndicator()
         setupSortingButton()
         self.navigationController?.navigationBar.prefersLargeTitles = true
@@ -40,16 +42,13 @@ class HomeViewController: UIViewController {
     }
     
     private func setupIndicator() {
-        indicator = UIActivityIndicatorView(style: .whiteLarge)
+        indicator = UIActivityIndicatorView(style: .large)
         indicator.color = .white
         indicator.center = view.center
         view.addSubview(indicator)
     }
-    private func setupMoviesCollection() {
-        collection
-            .rx
-            .setDelegate(self)
-            .disposed(by: bag)
+    private func setupRefreshControl() {
+        refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(refreshMovies), for: .valueChanged)
         refreshControl.attributedTitle = NSAttributedString(string: Strings.Message.pull)
         refreshControl.tintColor = .white
@@ -58,7 +57,7 @@ class HomeViewController: UIViewController {
     
     private func setupSortingButton() {
         let sortingButton = UIBarButtonItem(title: "Sort", style: .plain, target: self, action: #selector(showSortingMenu))
-        self.navigationItem.rightBarButtonItem = sortingButton
+        self.tabBarController?.navigationItem.rightBarButtonItem = sortingButton
     }
     
     @objc private func refreshMovies() {
@@ -74,14 +73,14 @@ class HomeViewController: UIViewController {
         let highestButton = UIAlertAction(title: topTitle, style: .default) {[weak self] _ in
             self?.moviesViewModel.isPopularMovies = false
             self?.moviesViewModel.getTopRatedMovies()
-            self?.navigationItem.title = Strings.Title.topRated
+            self?.tabBarController?.navigationItem.title = Strings.Title.topRated
         }
         menu.addAction(highestButton)
         
         let popularButton = UIAlertAction(title: popTitle, style: .default) {[weak self] _ in
             self?.moviesViewModel.isPopularMovies = true
             self?.moviesViewModel.getPopularMovies()
-            self?.navigationItem.title = Strings.Title.popular
+            self?.tabBarController?.navigationItem.title = Strings.Title.popular
         }
         menu.addAction(popularButton)
         
@@ -97,26 +96,13 @@ class HomeViewController: UIViewController {
         indicator.startAnimating()
         moviesViewModel
             .movies
-            .bind(to: collection.rx.items(cellIdentifier: Strings.Cell.movie, cellType: MovieCell.self)) { [weak self](row , item , cell) in
+            .sink { [weak self] movies in
                 guard let self = self else { return }
                 self.indicator.stopAnimating()
                 self.refreshControl.endRefreshing()
-                cell.configCell(imagePath: item.moviePoster)
-                if self.moviesViewModel.movies.value.count <= 60 {
-                    self.moviesViewModel.saveMovieInStorage(movie: item)
-                }
-        }
-        .disposed(by: bag)
-    }
-    
-    private func moviesAction() {
-        collection
-            .rx
-            .modelSelected(MoviesData.ViewModel.self)
-            .subscribe(onNext: { [weak self] movie in
-                self?.routeToMovieDetails(with: movie)
-            })
-            .disposed(by: bag)
+                self.movies = movies
+            }
+            .store(in: &subscription)
     }
     
     //MARK: - Routing
@@ -132,18 +118,41 @@ class HomeViewController: UIViewController {
 
 extension HomeViewController: UICollectionViewDelegate {
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let movie = self.movies[indexPath.row]
+        self.routeToMovieDetails(with: movie)
+    }
+    
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        
         let countOfMoviesInRow = 2
         let countOfMoviesPerPage = 20
-        let movies =  self.moviesViewModel.movies.value
+        let movies =  self.movies
         
+        if self.movies.count <= 60 {
+            self.moviesViewModel.saveMovieInStorage(movie: self.movies[indexPath.row])
+        }
         if indexPath.row == movies.count - countOfMoviesInRow {
             let pageNo = (movies.count / countOfMoviesPerPage) + 1
             moviesViewModel.getMoviesInNext(page: pageNo)
         }
     }
 }
+
+
+extension HomeViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        movies.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Strings.Cell.movie, for: indexPath) as? MovieCell else { return UICollectionViewCell() }
+        let movie = movies[indexPath.row]
+        cell.configCell(imagePath: movie.moviePoster)
+        return cell
+    }
+}
+
+
 
 extension HomeViewController: UICollectionViewDelegateFlowLayout {
     

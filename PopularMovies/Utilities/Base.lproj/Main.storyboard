@@ -125,6 +125,10 @@
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
+                                <connections>
+                                    <outlet property="dataSource" destination="Aqz-wp-00J" id="CV7-3t-G8n"/>
+                                    <outlet property="delegate" destination="Aqz-wp-00J" id="aBU-Vk-gpK"/>
+                                </connections>
                             </collectionView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="wsb-dE-vQ4"/>

@@ -7,12 +7,10 @@
 //
 
 import Foundation
-import RxSwift
-import RxCocoa
-
+import Combine
 
 protocol MoviesBusiness {
-    var movies: BehaviorRelay<[MoviesData.ViewModel]> {get}
+    var movies: AnyPublisher<[MoviesData.ViewModel], Never> {get}
     var isPopularMovies: Bool {get set}
     func getPopularMovies()
     func getTopRatedMovies()
@@ -21,30 +19,36 @@ protocol MoviesBusiness {
 }
 
 class MoviesViewModel: MoviesBusiness {
-    
     var isPopularMovies = true
-    var movies: BehaviorRelay<[MoviesData.ViewModel]> = BehaviorRelay(value: [])
-    private let bag = DisposeBag()
+    var movies: AnyPublisher<[MoviesData.ViewModel], Never> {
+        currentMovies.eraseToAnyPublisher()
+    }
+
+    private var subscribtion = Set<AnyCancellable>()
+    private let currentMovies = CurrentValueSubject<[MoviesData.ViewModel], Never>([])
     private let storage = LocalStorage.shared
+    private let worker: WorkerBusinessLogic = MoviesWorker()
     
     private func getMoviesIn(page: Int) {
-        MoviesWorker
+        worker
             .getMovies(page: page)
-            .subscribe(onNext: {[weak self] data in
-                let moviesViewModel = data.movies.map { movie in
+            .sink {completion in
+                print("view model \(completion)")
+            } receiveValue: { [weak self ] response in
+                let moviesViewModel = response.movies.map { movie in
                     MoviesData.ViewModel(moviePoster: movie.posterPath,
                                    id: movie.id, originalTitle: movie.originalTitle,
                                    overview: movie.overview, voteAverage: movie.voteAverage,
                                    releaseDate: movie.releaseDate)
                 }
                 if page == 1 {
-                    self?.movies.accept(moviesViewModel)
+                    self?.currentMovies.value = moviesViewModel
                 } else {
-                    let result = (self?.movies.value ?? []) + moviesViewModel
-                    self?.movies.accept(result)
+                    let result = (self?.currentMovies.value ?? []) + moviesViewModel
+                    self?.currentMovies.value = result
                 }
-            })
-            .disposed(by: bag)
+            }
+            .store(in: &subscribtion)
     }
     
     func getPopularMovies() {
@@ -52,7 +56,7 @@ class MoviesViewModel: MoviesBusiness {
             getMoviesIn(page: 1)
         } else {
             let offlineMovies = getOfflineMovies()
-            movies.accept(offlineMovies)
+            currentMovies.value = offlineMovies
         }
     }
     
@@ -62,28 +66,30 @@ class MoviesViewModel: MoviesBusiness {
         } else {
             let offlineMovies = getOfflineMovies()
             let topMovies = offlineMovies.sorted { Double(truncating: $0.voteAverage as NSNumber) > Double(truncating: $1.voteAverage as NSNumber) }
-            movies.accept(topMovies)
+            currentMovies.value = topMovies
         }
     }
     
     private func getTopRatedMoviesIn(page: Int) {
-        MoviesWorker
+        worker
             .getTopMovies(page: page)
-            .subscribe(onNext: {[weak self] data in
-                let moviesViewModel = data.movies.map { movie in
+            .sink { completed in
+                print("view model \(completed)")
+            } receiveValue: { [weak self ] response in
+                let moviesViewModel = response.movies.map { movie in
                     MoviesData.ViewModel(moviePoster: movie.posterPath,
                                    id: movie.id, originalTitle: movie.originalTitle,
                                    overview: movie.overview, voteAverage: movie.voteAverage,
                                    releaseDate: movie.releaseDate)
                 }
                 if page == 1 {
-                    self?.movies.accept(moviesViewModel)
+                    self?.currentMovies.value = moviesViewModel
                 } else {
-                    let result = (self?.movies.value ?? []) + moviesViewModel
-                    self?.movies.accept(result)
+                    let result = (self?.currentMovies.value ?? []) + moviesViewModel
+                    self?.currentMovies.value = result
                 }
-            })
-            .disposed(by: bag)
+            }
+            .store(in: &subscribtion)
     }
     
     func getMoviesInNext(page: Int) {
@@ -101,12 +107,12 @@ class MoviesViewModel: MoviesBusiness {
     private func getOfflineMovies() -> [MoviesData.ViewModel] {
         let offlineMovies = storage.getMovies()
             .map { (movie)  in
-                MoviesData.ViewModel(moviePoster: movie.value(forKey: "poster") as! String,
-                               id: movie.value(forKey: "id") as! Int,
-                               originalTitle: movie.value(forKey: "name") as! String,
-                               overview: movie.value(forKey: "overview") as! String,
-                               voteAverage: movie.value(forKey: "rate") as! Double,
-                               releaseDate: movie.value(forKey: "mRelease") as! String)
+                MoviesData.ViewModel(moviePoster: movie.image ,
+                               id: movie.identifier ,
+                               originalTitle: movie.title,
+                               overview: movie.notes,
+                               voteAverage: movie.rate ,
+                               releaseDate: movie.relase )
         }
         
         return offlineMovies

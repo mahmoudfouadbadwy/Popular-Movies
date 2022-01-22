@@ -1,9 +1,9 @@
 //
-//  Movies+CoreDataProperties.swift
+//  Movie+CoreDataProperties.swift
 //  PopularMovies
 //
-//  Created by Mahmoud Fouad on 10/23/21.
-//  Copyright © 2021 Mahmoud fouad. All rights reserved.
+//  Created by Mahmoud Fouad on 22/01/2022.
+//  Copyright © 2022 Mahmoud fouad. All rights reserved.
 //
 //
 
@@ -11,10 +11,10 @@ import Foundation
 import CoreData
 
 
-extension Movies {
+extension Movie {
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<Movies> {
-        return NSFetchRequest<Movies>(entityName: "Movie")
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<Movie> {
+        return NSFetchRequest<Movie>(entityName: "Movie")
     }
 
     @NSManaged public var id: Int64
@@ -24,5 +24,9 @@ extension Movies {
     @NSManaged public var overview: String?
     @NSManaged public var poster: String?
     @NSManaged public var rate: Double
+
+}
+
+extension Movie : Identifiable {
 
 }

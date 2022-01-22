@@ -7,16 +7,22 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
-class MoviesWorker {
-    
-    static func getMovies(page: Int) -> Observable<MoviesData.Response> {
-        return WebService.makeRequest(requestUrl: "\(Strings.URL.moviesUrl)&page=\(page)")
+
+protocol WorkerBusinessLogic {
+    func getMovies(page: Int) -> AnyPublisher<MoviesData.Response, Exception>
+    func getTopMovies(page: Int) -> AnyPublisher<MoviesData.Response, Exception>
+}
+
+
+class MoviesWorker: WorkerBusinessLogic {
+    private let webService = WebService()
+    func getMovies(page: Int) -> AnyPublisher<MoviesData.Response, Exception> {
+        webService.makeRequest(url: "\(Strings.URL.moviesUrl)&page=\(page)")
     }
     
-    static func getTopMovies(page: Int) -> Observable<MoviesData.Response> {
-        return WebService.makeRequest(requestUrl: "\(Strings.URL.moviesTopRate)&page=\(page)")
+    func getTopMovies(page: Int) -> AnyPublisher<MoviesData.Response, Exception> {
+        webService.makeRequest(url: "\(Strings.URL.moviesTopRate)&page=\(page)")
     }
-
 }

@@ -10,26 +10,26 @@ import CoreData
 
 class LocalStorage {
     
-    //MARK:- Properties
-    private var movies: [Movies] = []
+    //MARK: - Properties
+    private var movies: [Movie] = []
     private var appDelegate: AppDelegate
     private var managedContext: NSManagedObjectContext
-    private var fetchRequest: NSFetchRequest<Movies>
+    private var fetchRequest: NSFetchRequest<Movie>
     private var entity: NSEntityDescription?
     static let shared = LocalStorage()
     var moviesCount: Int {
         getMovies().count
     }
     
-    //MARK:- Initializer
+    //MARK: - Initializer
     private init() {
         appDelegate = UIApplication.shared.delegate as! AppDelegate
         managedContext = appDelegate.persistentContainer.viewContext
-        fetchRequest = Movies.fetchRequest()
-        entity = Movies.entity()
+        fetchRequest = Movie.fetchRequest()
+        entity = Movie.entity()
     }
     
-    //MARK:- Intents
+    //MARK: - Intents
     func add(movie value: MoviesData.ViewModel)  {
         fetchRequest.predicate = NSPredicate.init(format:"id == \(value.id)")
         if let result = try? managedContext.fetch(fetchRequest), result.isEmpty {
@@ -47,7 +47,7 @@ class LocalStorage {
         guard let entity = entity else {
             return
         }
-        let movie = Movies(entity: entity, insertInto: managedContext)
+        let movie = Movie(entity: entity, insertInto: managedContext)
         movie.id = Int64(id)
         movie.name = name
         movie.poster = poster
@@ -58,7 +58,7 @@ class LocalStorage {
         appDelegate.saveContext()
     }
     
-    func getMovies() -> [Movies] {
+    func getMovies() -> [Movie] {
         do {
             movies =  try managedContext.fetch(fetchRequest)
         }
@@ -120,7 +120,7 @@ class LocalStorage {
         return isFavorite
     }
     
-    func getMovieBy(id: Int) -> Movies? {
+    func getMovieBy(id: Int) -> Movie? {
         fetchRequest.predicate = NSPredicate.init(format: "id == \(id)")
         let result = try? managedContext.fetch(fetchRequest)
         return result?[0]
