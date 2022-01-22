@@ -12,17 +12,17 @@ import RxSwift
 
 class FavoriteViewController: UIViewController {
     
-    //MARK:- Properties
+    //MARK: - Properties
     private let viewModel: FavoriteBusiness = FavoriteViewModel()
     private let cellIdentifier = "favouriteCell"
     private let bag = DisposeBag()
     private var indicator: UIActivityIndicatorView!
     private let refreshControl = UIRefreshControl()
     
-    //MARK:- IBOutlets
+    //MARK: - IBOutlets
     @IBOutlet weak private var favCollection: UICollectionView!
     
-    //MARK:- Lifecycle
+    //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -35,15 +35,15 @@ class FavoriteViewController: UIViewController {
         refreshMovies()
     }
     
-    //MARK:- UI
+    //MARK: - UI
     private func setupUI() {
         setupMoviesCollection()
         setupIndicator()
-        self.navigationItem.title = Strings.Title.favorite
+        self.tabBarController?.navigationItem.title = Strings.Title.favorite
     }
     private func setupIndicator() {
         indicator = UIActivityIndicatorView(style: .whiteLarge)
-        indicator.color = .red
+        indicator.color = .white
         indicator.center = view.center
         view.addSubview(indicator)
     }
@@ -54,14 +54,14 @@ class FavoriteViewController: UIViewController {
             .disposed(by: bag)
         refreshControl.addTarget(self, action: #selector(refreshMovies), for: .valueChanged)
         refreshControl.attributedTitle = NSAttributedString(string: Strings.Message.pull)
-        refreshControl.tintColor = .red
+        refreshControl.tintColor = .white
         favCollection.addSubview(refreshControl)
     }
     @objc private func refreshMovies() {
         viewModel.getFavoriteMovies()
     }
     
-    //MARK:- UILogic
+    //MARK: - UILogic
     private func bindMovies() {
         self.indicator.startAnimating()
         viewModel
@@ -81,7 +81,7 @@ class FavoriteViewController: UIViewController {
             .disposed(by: bag)
     }
     
-    //MARK:- Intent
+    //MARK: - Intent
     private func moviesAction() {
         favCollection
             .rx
@@ -92,7 +92,7 @@ class FavoriteViewController: UIViewController {
             .disposed(by: bag)
     }
     
-    //MARK:- Routing
+    //MARK: - Routing
     private func routeToMovieDetails(with movie: MoviesData.ViewModel) {
         guard let movieDetailsController = getController(MovieDetailsController.self, fromBoard: "Main") else { return }
         movieDetailsController.movieID = movie.id

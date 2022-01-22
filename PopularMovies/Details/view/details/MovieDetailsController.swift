@@ -15,7 +15,7 @@ import RxSwift
 
 class MovieDetailsController: UIViewController {
     
-    //MARK:- IBOutlets
+    //MARK: - IBOutlets
     @IBOutlet weak private var cosmosView: CosmosView!
     @IBOutlet weak private var movieOverview: UITextView!
     @IBOutlet weak private var movieName: UILabel!
@@ -26,7 +26,7 @@ class MovieDetailsController: UIViewController {
     @IBOutlet weak private var ReviewsBtn: UIButton!
     @IBOutlet weak private var moreStack: UIStackView!
     
-    //MARK:- Properties
+    //MARK: - Properties
     var movieID: Int!
     private var viewModel: MoviewDetailsBusiness = MovieDetailsViewModel()
     private let bag = DisposeBag()
@@ -34,7 +34,7 @@ class MovieDetailsController: UIViewController {
     private var isFavorite: Bool?
     private var movie: MovieDetailsData.ViewModel?
     
-    //MARK:- Lifecycle
+    //MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -46,7 +46,7 @@ class MovieDetailsController: UIViewController {
         showTrailers()
     }
 
-    //MARK:- Actions
+    //MARK: - Actions
     func favoriteAction() {
         favButton
             .rx
@@ -67,9 +67,10 @@ class MovieDetailsController: UIViewController {
     
     
     
-    //MARK:- UI
+    //MARK: - UI
     private func setupUI() {
-        self.navigationItem.title = Strings.Title.details
+        self.navigationItem.largeTitleDisplayMode = .never
+        self.title = Strings.Title.details
         self.cosmosView.settings.fillMode = .precise
         self.cosmosView.isUserInteractionEnabled = false
         indicator.center = view.center
@@ -78,7 +79,7 @@ class MovieDetailsController: UIViewController {
         
     }
     
-    //MARK:- UI Logic
+    //MARK: - UI Logic
     private func bindeMovieDetails() {
         indicator.startAnimating()
         viewModel

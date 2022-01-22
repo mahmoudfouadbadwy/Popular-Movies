@@ -12,16 +12,16 @@ import RxCocoa
 
 class HomeViewController: UIViewController {
     
-    //MARK:- IBOutlets
+    //MARK: - IBOutlets
     @IBOutlet private weak var collection: UICollectionView!
     
-    //MARK:- Properties
+    //MARK: - Properties
     private var moviesViewModel: MoviesBusiness = MoviesViewModel()
     private var indicator: UIActivityIndicatorView!
     private let bag = DisposeBag()
     private let refreshControl = UIRefreshControl()
     
-    //MARK:- Lifecycle
+    //MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -30,17 +30,18 @@ class HomeViewController: UIViewController {
         moviesAction()
     }
     
-    //MARK:- UI
+    //MARK: - UI
     private func setupUI() {
         setupMoviesCollection()
         setupIndicator()
         setupSortingButton()
-        self.navigationItem.title = Strings.Title.popular
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+        self.tabBarController?.navigationItem.title = Strings.Title.popular
     }
     
     private func setupIndicator() {
         indicator = UIActivityIndicatorView(style: .whiteLarge)
-        indicator.color = .red
+        indicator.color = .white
         indicator.center = view.center
         view.addSubview(indicator)
     }
@@ -51,7 +52,7 @@ class HomeViewController: UIViewController {
             .disposed(by: bag)
         refreshControl.addTarget(self, action: #selector(refreshMovies), for: .valueChanged)
         refreshControl.attributedTitle = NSAttributedString(string: Strings.Message.pull)
-        refreshControl.tintColor = .red
+        refreshControl.tintColor = .white
         collection.addSubview(refreshControl)
     }
     
@@ -91,7 +92,7 @@ class HomeViewController: UIViewController {
         self.present(menu, animated: true)
     }
     
-    //MARK:- UILogic
+    //MARK: - UILogic
     private func bindMovies() {
         indicator.startAnimating()
         moviesViewModel
@@ -118,7 +119,7 @@ class HomeViewController: UIViewController {
             .disposed(by: bag)
     }
     
-    //MARK:- Routing
+    //MARK: - Routing
     private func routeToMovieDetails(with movie: MoviesData.ViewModel) {
         guard let details = self.getController(MovieDetailsController.self, fromBoard: "Main") else {
             return
