@@ -21,7 +21,7 @@ class LocalStorage {
         getMovies().count
     }
     
-    //MARK:- Initializer
+    //MARK: - Initializer
     private init() {
         appDelegate = UIApplication.shared.delegate as! AppDelegate
         managedContext = appDelegate.persistentContainer.viewContext
@@ -29,7 +29,7 @@ class LocalStorage {
         entity = Movies.entity()
     }
     
-    //MARK:- Intents
+    //MARK: - Intents
     func add(movie value: MoviesData.ViewModel)  {
         fetchRequest.predicate = NSPredicate.init(format:"id == \(value.id)")
         if let result = try? managedContext.fetch(fetchRequest), result.isEmpty {

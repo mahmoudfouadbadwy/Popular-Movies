@@ -30,7 +30,7 @@ enum MovieDetailsData {
     static var fakeMovie: ViewModel {
         ViewModel(moviePoster: "",
                   id: 1,
-                  originalTitle: "No name available!",
+                  originalTitle: "",
                   overview: "No overview available",
                   voteAverage: 0.0,
                   releaseDate: "0000-00-00")

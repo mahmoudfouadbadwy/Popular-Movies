@@ -33,9 +33,9 @@ class MoviesViewModel: MoviesBusiness {
             .subscribe(onNext: {[weak self] data in
                 let moviesViewModel = data.movies.map { movie in
                     MoviesData.ViewModel(moviePoster: movie.posterPath,
-                                   id: movie.id, originalTitle: movie.originalTitle,
-                                   overview: movie.overview, voteAverage: movie.voteAverage,
-                                   releaseDate: movie.releaseDate)
+                                         id: movie.id, originalTitle: movie.originalTitle,
+                                         overview: movie.overview, voteAverage: movie.voteAverage,
+                                         releaseDate: movie.releaseDate)
                 }
                 if page == 1 {
                     self?.movies.accept(moviesViewModel)
@@ -72,9 +72,9 @@ class MoviesViewModel: MoviesBusiness {
             .subscribe(onNext: {[weak self] data in
                 let moviesViewModel = data.movies.map { movie in
                     MoviesData.ViewModel(moviePoster: movie.posterPath,
-                                   id: movie.id, originalTitle: movie.originalTitle,
-                                   overview: movie.overview, voteAverage: movie.voteAverage,
-                                   releaseDate: movie.releaseDate)
+                                         id: movie.id, originalTitle: movie.originalTitle,
+                                         overview: movie.overview, voteAverage: movie.voteAverage,
+                                         releaseDate: movie.releaseDate)
                 }
                 if page == 1 {
                     self?.movies.accept(moviesViewModel)
@@ -101,13 +101,13 @@ class MoviesViewModel: MoviesBusiness {
     private func getOfflineMovies() -> [MoviesData.ViewModel] {
         let offlineMovies = storage.getMovies()
             .map { (movie)  in
-                MoviesData.ViewModel(moviePoster: movie.value(forKey: "poster") as! String,
-                               id: movie.value(forKey: "id") as! Int,
-                               originalTitle: movie.value(forKey: "name") as! String,
-                               overview: movie.value(forKey: "overview") as! String,
-                               voteAverage: movie.value(forKey: "rate") as! Double,
-                               releaseDate: movie.value(forKey: "mRelease") as! String)
-        }
+                MoviesData.ViewModel(moviePoster: movie.image,
+                                     id: Int(movie.id),
+                                     originalTitle: movie.title,
+                                     overview: movie.notes,
+                                     voteAverage: movie.rate,
+                                     releaseDate: movie.release)
+            }
         
         return offlineMovies
     }

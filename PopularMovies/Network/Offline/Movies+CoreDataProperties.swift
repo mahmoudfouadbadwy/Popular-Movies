@@ -12,11 +12,11 @@ import CoreData
 
 
 extension Movies {
-
+    
     @nonobjc public class func fetchRequest() -> NSFetchRequest<Movies> {
         return NSFetchRequest<Movies>(entityName: "Movie")
     }
-
+    
     @NSManaged public var id: Int64
     @NSManaged public var isFavorite: Bool
     @NSManaged public var mRelease: String?
@@ -24,5 +24,20 @@ extension Movies {
     @NSManaged public var overview: String?
     @NSManaged public var poster: String?
     @NSManaged public var rate: Double
+    
+}
 
+extension Movies {
+    var release: String {
+        mRelease ?? ""
+    }
+    var title: String {
+        name ?? ""
+    }
+    var notes: String {
+        overview ?? ""
+    }
+    var image: String {
+        poster ?? ""
+    }
 }

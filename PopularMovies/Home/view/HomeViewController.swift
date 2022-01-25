@@ -19,7 +19,7 @@ class HomeViewController: UIViewController {
     private var moviesViewModel: MoviesBusiness = MoviesViewModel()
     private var indicator: UIActivityIndicatorView!
     private let bag = DisposeBag()
-    private let refreshControl = UIRefreshControl()
+    private var refreshControl: UIRefreshControl!
     
     //MARK: - Life cycle
     override func viewDidLoad() {
@@ -35,12 +35,17 @@ class HomeViewController: UIViewController {
         setupMoviesCollection()
         setupIndicator()
         setupSortingButton()
-        self.navigationController?.navigationBar.prefersLargeTitles = true
-        self.tabBarController?.navigationItem.title = Strings.Title.popular
+        setupNavigationTitle()
     }
     
+    private func setupNavigationTitle() {
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+        navigationController?.navigationBar.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+        navigationController?.navigationBar.prefersLargeTitles = true
+        tabBarController?.navigationItem.title = Strings.Title.popular
+    }
     private func setupIndicator() {
-        indicator = UIActivityIndicatorView(style: .whiteLarge)
+        indicator = UIActivityIndicatorView(style: .large)
         indicator.color = .white
         indicator.center = view.center
         view.addSubview(indicator)
@@ -50,21 +55,23 @@ class HomeViewController: UIViewController {
             .rx
             .setDelegate(self)
             .disposed(by: bag)
+        refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(refreshMovies), for: .valueChanged)
-        refreshControl.attributedTitle = NSAttributedString(string: Strings.Message.pull)
+        refreshControl.attributedTitle = NSAttributedString(string: Strings.Message.pull,
+                                                            attributes: [.foregroundColor: UIColor.white])
         refreshControl.tintColor = .white
         collection.addSubview(refreshControl)
     }
     
     private func setupSortingButton() {
         let sortingButton = UIBarButtonItem(title: "Sort", style: .plain, target: self, action: #selector(showSortingMenu))
-        self.navigationItem.rightBarButtonItem = sortingButton
+        tabBarController?.navigationItem.rightBarButtonItem = sortingButton
     }
     
     @objc private func refreshMovies() {
         moviesViewModel.isPopularMovies = true
         moviesViewModel.getPopularMovies()
-        self.navigationItem.title = Strings.Title.popular
+        tabBarController?.navigationItem.title = Strings.Title.popular
     }
     
     @objc private func showSortingMenu() {
@@ -74,14 +81,14 @@ class HomeViewController: UIViewController {
         let highestButton = UIAlertAction(title: topTitle, style: .default) {[weak self] _ in
             self?.moviesViewModel.isPopularMovies = false
             self?.moviesViewModel.getTopRatedMovies()
-            self?.navigationItem.title = Strings.Title.topRated
+            self?.tabBarController?.navigationItem.title = Strings.Title.topRated
         }
         menu.addAction(highestButton)
         
         let popularButton = UIAlertAction(title: popTitle, style: .default) {[weak self] _ in
             self?.moviesViewModel.isPopularMovies = true
             self?.moviesViewModel.getPopularMovies()
-            self?.navigationItem.title = Strings.Title.popular
+            self?.tabBarController?.navigationItem.title = Strings.Title.popular
         }
         menu.addAction(popularButton)
         
@@ -114,17 +121,17 @@ class HomeViewController: UIViewController {
             .rx
             .modelSelected(MoviesData.ViewModel.self)
             .subscribe(onNext: { [weak self] movie in
-                self?.routeToMovieDetails(with: movie)
+                self?.routeToMovieDetails(with: movie.id)
             })
             .disposed(by: bag)
     }
     
     //MARK: - Routing
-    private func routeToMovieDetails(with movie: MoviesData.ViewModel) {
+    private func routeToMovieDetails(with movieID: Int) {
         guard let details = self.getController(MovieDetailsController.self, fromBoard: "Main") else {
             return
         }
-        details.movieID = movie.id
+        details.viewModel = MovieDetailsViewModel(movieID: movieID)
         self.navigate(to: details)
     }
 }

@@ -11,48 +11,51 @@ import RxSwift
 import RxCocoa
 
 class ReviewsViewController: UIViewController {
-
-    //MARK:- IBOutlets
+    
+    //MARK: - IBOutlets
     @IBOutlet weak private var reviewsCollection: UICollectionView!
     
-    //MARK:-Properties
-    var movieID: Int!
-    private let viewModel: MovieReviewsBusiness =  MovieDetailsViewModel()
+    //MARK: - Properties
+    var viewModel: MovieReviewsBusiness!
     private let bag = DisposeBag()
     private let reviewCellIdentifier = Strings.Cell.review
     
-    //MARK:- Lifecycle
+    //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         bindReviews()
-        viewModel.getReviews(by: movieID)
-        
+        viewModel.getReviews()
+       
     }
+   
     
-    //MARK:- UI
+    //MARK: - UI
     private func setupUI() {
-        navigationItem.title = Strings.Title.reviews
+        navigationItem.largeTitleDisplayMode = .always
+        title = Strings.Title.reviews
         reviewsCollection
             .rx
             .setDelegate(self)
-        .disposed(by: bag)
+            .disposed(by: bag)
     }
     
-    //MARK:- UILogic
+    //MARK: - UILogic
     private func bindReviews() {
+        print("bining....")
         viewModel
             .movieReviews
-            .bind(to: reviewsCollection.rx.items(cellIdentifier: reviewCellIdentifier, cellType: ReviewCell.self)){ (row , item , cell) in
+            .drive(reviewsCollection.rx.items(cellIdentifier: reviewCellIdentifier,
+                                                 cellType: ReviewCell.self)) { (row , item , cell) in
                 cell.config(name: item.author, content: item.review)
-        }
-        .disposed(by: bag)
+            }
+                                                 .disposed(by: bag)
     }
 }
 
 
 extension ReviewsViewController: UICollectionViewDelegateFlowLayout {
-
+    
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {

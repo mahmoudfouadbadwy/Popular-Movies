@@ -39,10 +39,10 @@ class FavoriteViewController: UIViewController {
     private func setupUI() {
         setupMoviesCollection()
         setupIndicator()
-        self.tabBarController?.navigationItem.title = Strings.Title.favorite
+        title = Strings.Title.favorite
     }
     private func setupIndicator() {
-        indicator = UIActivityIndicatorView(style: .whiteLarge)
+        indicator = UIActivityIndicatorView(style: .large)
         indicator.color = .white
         indicator.center = view.center
         view.addSubview(indicator)
@@ -64,6 +64,7 @@ class FavoriteViewController: UIViewController {
     //MARK: - UILogic
     private func bindMovies() {
         self.indicator.startAnimating()
+        
         viewModel
             .movies
             .bind(to: favCollection.rx.items(cellIdentifier: cellIdentifier, cellType: FavouriteCell.self)) {  (row , item , cell) in
@@ -87,15 +88,15 @@ class FavoriteViewController: UIViewController {
             .rx
             .modelSelected(MoviesData.ViewModel.self)
             .subscribe(onNext: { [weak self] movie in
-                self?.routeToMovieDetails(with: movie)
+                self?.routeToMovieDetails(with: movie.id)
             })
             .disposed(by: bag)
     }
     
     //MARK: - Routing
-    private func routeToMovieDetails(with movie: MoviesData.ViewModel) {
+    private func routeToMovieDetails(with movieID: Int) {
         guard let movieDetailsController = getController(MovieDetailsController.self, fromBoard: "Main") else { return }
-        movieDetailsController.movieID = movie.id
+        movieDetailsController.viewModel = MovieDetailsViewModel(movieID: movieID)   
         self.navigate(to: movieDetailsController)
     }
 }

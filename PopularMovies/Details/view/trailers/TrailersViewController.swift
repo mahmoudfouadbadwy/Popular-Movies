@@ -12,38 +12,39 @@ import RxCocoa
 
 class TrailersViewController: UIViewController {
     
-    //MARK:- IBOutlets
+    //MARK: - IBOutlets
     @IBOutlet weak private var trailersCollection: UICollectionView!
     
-    //MARK:- Properties
-    var movieId: Int!
-    private let viewModel: MoviewTrailersBusiness = MovieDetailsViewModel()
+    //MARK: - Properties
+    var viewModel: MoviewTrailersBusiness!
     private let trailerCellIdentifier = Strings.Cell.trailer
     private let bag = DisposeBag()
     
-    //MARK:- Lifecycle
+    //MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        bindTrailers()
         setupUI()
-        viewModel.getTrailers(by: movieId)
+        bindTrailers()
+        viewModel.getTrailers()
         setupCollectionAction()
     }
-    
-    //MARK:- UI
+
+    //MARK: - UI
     private func setupUI() {
-        navigationItem.title = Strings.Title.trailer
+        navigationItem.largeTitleDisplayMode = .always
+        title = Strings.Title.trailer
+    
         trailersCollection
             .rx
             .setDelegate(self)
             .disposed(by: bag)
     }
     
-    //MARK:- UI Logic
+    //MARK: - UI Logic
     private func bindTrailers() {
         viewModel
             .movieTrailers
-            .bind(to: trailersCollection.rx.items(cellIdentifier: trailerCellIdentifier, cellType: TrailerCell.self)){ (row , item , cell) in
+            .drive(trailersCollection.rx.items(cellIdentifier: trailerCellIdentifier, cellType: TrailerCell.self)){ (row , item , cell) in
                 cell.config(title: item.name)
         }
         .disposed(by: bag)
@@ -60,9 +61,8 @@ class TrailersViewController: UIViewController {
     }
     
     private func openTrailer(by key: String) {
-        guard  var url = URL(string :"youtube://\(key)") else { return }
-        if  !UIApplication.shared.canOpenURL(url)
-        {
+        guard var url = URL(string :"youtube://\(key)") else { return }
+        if !UIApplication.shared.canOpenURL(url){
             url = URL(string: "https://www.youtube.com/watch?v=\(key)")!  // youtube app on phone
         }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)  // youtube on browser
